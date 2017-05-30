@@ -1,3 +1,4 @@
+# tkinter 예제
 from tkinter import *
 from tkinter.ttk import *
 from multiprocessing import Queue # python Setup.py build # exe 파일 생성을 위해 꼭 필요
