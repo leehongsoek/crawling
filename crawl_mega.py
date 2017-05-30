@@ -321,8 +321,8 @@ def func_mega_upload():
 
     r = requests.post( url, fields )
 
-    print( '[',r.text,']' )
-
+    # print( '[',r.text,']' )
+#
 
 if  __name__ == '__main__':
 
@@ -348,11 +348,9 @@ if  __name__ == '__main__':
     # print( '-------------------------------------------------------------dicCinemas' )
     # for k, v in dicCinemas.items():
     #     print( '{} {}'.format( k, v ) )
-    print( '-------------------------------------------------------------' )
 
 
     func_mega_upload()
-    print( '-------------------------------------------------------------' )
 
 #
 #
