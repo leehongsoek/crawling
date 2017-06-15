@@ -5,7 +5,7 @@ import pymysql
 # print(sys.stdin.encoding)
 
 userid = 'mtns_kofic' # input('사용자 아이디 : ')
-userpw = '' # input('사용자 암호 : ')
+userpw = '' # input('사용자 암호 : ') # todo
 # userpw = getpass.getpass('사용자 암호 : ')
 
 
