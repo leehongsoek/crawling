@@ -10,7 +10,7 @@ userpw = '' # input('사용자 암호 : ')
 
 
 try:
-    conn = pymysql.connect( host='mtns.co.kr', port=3306, user=userid, passwd=userpw, db='mtns_kofic', charset='utf8' )
+    conn = pymysql.connect( host='xxxxx.co.kr', port=3306, user=userid, passwd=userpw, db='mtns_kofic', charset='utf8' )
 except Exception  as error: # pymysql.InternalError
     code, message = error.args
     print("접속오류 : ", code, message)
