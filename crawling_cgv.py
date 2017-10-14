@@ -489,9 +489,9 @@ if  __name__ == '__main__':
 
     ##crawl_cgv_moviefinder() # 영화/무비파인더(http://www.cgv.co.kr/movies/finder.aspx) 에서 영화데이터를 가지고 온다. (dicMovies)
 
-    crawl_cgv_theaters() # 예매/상영시간표(http://www.cgv.co.kr/reserve/show-times/) 극장정보를 가지고 온다. (dicTheaters)
+    ##crawl_cgv_theaters() # 예매/상영시간표(http://www.cgv.co.kr/reserve/show-times/) 극장정보를 가지고 온다. (dicTheaters)
 
-    ##crawl_cgv_showtimes() # 예매/상영시간표(http://www.cgv.co.kr/reserve/show-times/)의 프래임에서 상영정보를 가지고 온다. (dicTicketMovies)
+    crawl_cgv_showtimes() # 예매/상영시간표(http://www.cgv.co.kr/reserve/show-times/)의 프래임에서 상영정보를 가지고 온다. (dicTicketMovies)
 
     crawl_cgv_upload()
 #########################################################################################################################################
