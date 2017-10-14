@@ -454,7 +454,7 @@ def crawl_cgv_showtimes():
 
             dicTicketingData[theaterkey] = dicTicketMovies
 #
-#
+# 예매/상영시간표(http://www.cgv.co.kr/reserve/show-times/)의 프래임에서 상영정보를 가지고 온다. (dicTicketMovies)
 #
 
 
