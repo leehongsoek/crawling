@@ -3,7 +3,7 @@ import json
 from jsonpath_rw import jsonpath, parse  # pip install jsonpath-rw      https://pypi.python.org/pypi/jsonpath-rw
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
-import requests # http://docs.python-requests.org/en/master/user/quickstart/
+import requests # http://docs.python-requests.org/en/master/user/quickstart/ pip install requests
 from multiprocessing import Queue # python Setup.py build # exe 파일 생성을 위해 꼭 필요
 
 #------------------------------------------------------------------------------------------------------------------------------------------------------

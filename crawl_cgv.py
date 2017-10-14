@@ -1,6 +1,55 @@
 '''
 CGV 에서 자료가져오기
+
+
+http://img.cgv.co.kr/R2014/js/app.utils.js 에 유의
+
+
+호출부
+app.movie().getList({ listType: '1', orderType: '1', filterType: '0' }, setMovieListBuild);
+
+구현부
+                getList: function (data, callback) {
+                var url = '/common/ajax/movies.aspx/GetMovieMoreList';
+                app.ajax().get({ dataType: 'json', url: url, data: data, contentType: "application/json; charset=utf-8", successHandler: callback });
+
+get: function (options) {
+                if (!options.url) $.error('not defined url.');
+                var url = getUrl(options.url),
+                    defaults = {
+                        type: "GET",
+                        url: url,
+                        data: options.data
+                    },
+                    config = $.extend(defaults, options);
+
+                config.url = url;
+
+                //app.log('[ajax] get url : ' + url);
+                //app.log(options.data);
+
+                $.ajax(config).done(function (result) {
+                    //app.log('[ajax] get result : ', result);
+                    //app.log(result);
+                    var r = result;
+                    if (config.dataType === 'json' && r.d) {
+                        r = $.parseJSON(result.d);
+                    }
+
+                    options.loading && options.loading.hide();
+                    if (!result.hasErrors) {
+                        options.successHandler && options.successHandler(r);
+                    } else {
+                        app.errorHandler(r);
+                    }
+                }).fail(function (jqxhr, textStatus, error) {
+                    options.loading && options.loading.hide();
+                    app.failHandler(error);
+                });
+            },
+
 '''
+
 
 import datetime, time
 import urllib3  # pip install urllib3
@@ -8,6 +57,7 @@ from bs4 import BeautifulSoup
 import json
 from jsonpath_rw import jsonpath, parse  # pip install jsonpath-rw      https://pypi.python.org/pypi/jsonpath-rw
 from multiprocessing import Queue # python Setup.py build # exe 파일 생성을 위해 꼭 필요
+from selenium import webdriver # pip install selenium
 
 
 dicRegions = {}  # 지역코드 정보
@@ -17,8 +67,47 @@ dicTicketingData = {}  # 티켓팅 정보
 
 http = urllib3.PoolManager()
 
+
+
+
+def func_test():
+
+    '''
+
+    url = 'http://www.cgv.co.kr/common/ajax/movies.aspx/GetMovieMoreList?listType=1&orderType=1&filterType=0&_=' # &_=1505471014753
+    r = http.request( 'GET', url )
+    data = r.data.decode( 'utf-8' )
+
+    print(data)
+    '''
+
+    # ChromeDriver - WebDriver for Chrome (https://sites.google.com/a/chromium.org/chromedriver/downloads) 에서 [Latest Release: ChromeDriver x.xxx] 다운로드 (widows 용으로)
+    driver = webdriver.Chrome( 'C:/chromedriver_win32/chromedriver.exe' ) # 압축을 푼 실행파일을 해당경로에 푼다.....
+
+    driver.implicitly_wait( 3 )
+
+    driver.get( 'http://www.cgv.co.kr/movies/' )
+    # 로그인 버튼을 눌러주자.
+    driver.implicitly_wait( 3 )
+    driver.find_element_by_xpath( '//*[@class="btn-more-fontbold"]' ).click()
+
+    driver.implicitly_wait( 30 )
+
+    '''
+    binary = 'C:/chromedriver_win32/chromedriver.exe'
+    browser = webdriver.Chrome( binary )
+    browser.get( 'http://naver.com' )
+    browser.quit()
+    '''
+
+
+#
+#
+#
+
+
 #------------------------------------------------------------------------------------------------------------------------------------------------------
-# 영화 / 무비파인더 에서 영화데이터를 가지고 온다. (dicMovies)
+# 영화 / 무비파인더(http://www.cgv.co.kr/movies/finder.aspx) 에서 영화데이터를 가지고 온다. (dicMovies)
 #
 def func_cgv_moviefinder():
     # 1 ~ 페이지 에서 부터 영화정보 (코드+이름+개봉일) 를 가지고 온다...
@@ -303,7 +392,11 @@ def func_cgv_upload():
     data = r.data.decode( 'utf-8' )
     print( data )
 
+
+
 if  __name__ == '__main__':
+
+    func_test()
 
     func_cgv_moviefinder()
 

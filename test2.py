@@ -10,6 +10,8 @@ if __name__ == "__main__":
     bs = BeautifulSoup(data, 'html.parser')
     l = bs.find_all('a')
 
+    print(bs)
+
     idx = 0
     for s in l:
         try:
