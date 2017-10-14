@@ -192,9 +192,7 @@ def crawl_mega_cinema(isPrnConsole):
 # 영화관(http://www.megabox.co.kr/?menuId=theater)에서 지역데이터,영화관데이터를 가지고 온다. (dicRegions,dicCinemas)
 #
 
-
-
-# ------------------------------------------------------------------------------------------------------------------------------------------------------
+#########################################################################################################################################
 # 영화관(http://www.megabox.co.kr/?menuId=theater)에서 영화관에 스케줄데이터를 가지고 온다. (dicRegions,dicCinemas)
 #
 def crawl_mega_schedule(isPrnConsole):
@@ -250,7 +248,7 @@ def crawl_mega_schedule(isPrnConsole):
             for tag1 in tags1:
                 # print(tag1)
 
-                noRooms = noRooms + 1
+                noRooms += 1
 
                 tags2 = tag1.select( "th.title > div > span.age_m" )
                 for tag2 in tags2:
@@ -262,7 +260,7 @@ def crawl_mega_schedule(isPrnConsole):
                 tags2 = tag1.select( "th.title > div > strong" )
                 for tag2 in tags2:
                     if tag2.text == '\xa0':
-                        cntRoom = cntRoom + 1 # 같은 영화가 반복 관이 추가
+                        cntRoom += 1 # 같은 영화가 반복 관이 추가
                     else:
                         cntRoom = 1
                         moviename = tag2.text
