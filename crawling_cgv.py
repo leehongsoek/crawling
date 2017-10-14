@@ -317,10 +317,10 @@ def crawl_cgv_showtimes():
         # if  today!='{:04d}{:02d}{:02d}'.format( date1.year, date1.month, date1.day ):  # 일단 오늘 자료만 가지고 온다.
         #     continue
 
-
+        # 극장을 하나씩 순회한다.
         for theaterkey in dicTheaters.keys():
 
-            # if  theaterkey != '0121':
+            # if  theaterkey != '0121': # 일단 특정극장만
             #     continue
 
             url = 'http://www.cgv.co.kr/common/showtimes/iframeTheater.aspx?areacode='+dicTheaters[theaterkey][0]+'&theatercode='+theaterkey+'&date='+days[0]+''
