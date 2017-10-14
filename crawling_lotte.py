@@ -10,7 +10,7 @@ from jsonpath_rw import jsonpath, parse  # pip install jsonpath-rw      https://
 from multiprocessing import Queue # python Setup.py build # exe 파일 생성을 위해 꼭 필요
 
 
-#------------------------------------------------------------------------------------------------------------------------------------------------------
+#########################################################################################################################################
 # 공통 변수......
 #
 dicMovieData = {}  # 영화데이터 정보
@@ -27,12 +27,21 @@ osversion = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like
 #
 #
 
-#------------------------------------------------------------------------------------------------------------------------------------------------------
-# 영화 / 박스 오피스 에서 영화데이터를 가지고 온다. (dicMovieData)
+
+#########################################################################################################################################
+# 영화 / 박스 오피스(http://www.lottecinema.co.kr/LCHS/Contents/Movie/Movie-List.aspx) 에서 영화데이터를 가지고 온다. (dicMovieData)
 #
-def func_lotte_boxoffice():
-#
-#
+def crawl_lotte_boxoffice(isPrnConsole):
+
+    print('### 영화 / 박스 오피스(http://www.lottecinema.co.kr/LCHS/Contents/Movie/Movie-List.aspx) 에서 영화데이터를 가지고 온다. ###')
+
+    movie_count = 0
+
+    if isPrnConsole:  #################
+        print( '-------------------------------------' )
+        print( 'no, 코드, 영화명, 장르, 예매, 개봉일, 관람등급' )
+        print( '-------------------------------------' )
+
     fields = {"paramList":
                           '{"MethodName":"GetMovies",'
                           '"channelType":"HO",'
@@ -56,7 +65,6 @@ def func_lotte_boxoffice():
 
     jsonpath_expr = parse( 'Movies.Items[*]' )
 
-    i = 0
     for match in jsonpath_expr.find( json_obj ):
         representationmoviecode = str( match.value['RepresentationMovieCode'] )
         movienamekr             = str( match.value['MovieNameKR'] ).strip()
@@ -68,10 +76,11 @@ def func_lotte_boxoffice():
 
         if movienamekr == '' or movienamekr == 'AD': continue
 
-        i = i + 1
-        # print( str( i ) + ' :: ' + representationmoviecode + ' // ' + movienamekr + ' / ' + moviegenrename  + ' / ' + bookingyn  + ' / ' + releasedate  + ' / ' + viewgradenameus)
-
         dicMovieData[representationmoviecode] = [movienamekr, moviegenrename, bookingyn, releasedate, viewgradenameus]  # 영화데이터 정보
+
+        if isPrnConsole: #################
+            movie_count += 1
+            print( '{} : {},{}'.format( movie_count, representationmoviecode, movienamekr, moviegenrename, bookingyn, releasedate, viewgradenameus ) )
 
     fields = {"paramList":
                           '{"MethodName":"GetMovies",'
@@ -96,7 +105,6 @@ def func_lotte_boxoffice():
 
     jsonpath_expr = parse( 'Movies.Items[*]' )
 
-    i = 0
     for match in jsonpath_expr.find( json_obj ):
         representationmoviecode = str( match.value['RepresentationMovieCode'] )
         movienamekr             = str( match.value['MovieNameKR'] )
@@ -108,19 +116,29 @@ def func_lotte_boxoffice():
 
         if movienamekr == '' or movienamekr == 'AD': continue
 
-        i = i + 1
-        # print( str( i ) + ' :: ' + representationmoviecode + ' // ' + movienamekr + ' / ' + moviegenrename  + ' / ' + bookingyn  + ' / ' + releasedate  + ' / ' + viewgradenameus)
-
         dicMovieData[representationmoviecode] = [movienamekr, moviegenrename, bookingyn, releasedate, viewgradenameus]  # 영화데이터 정보
+
+        if isPrnConsole:  #################
+            movie_count += 1
+            print( '{} : {},{},{},{},{},{}'.format( movie_count, representationmoviecode, movienamekr, moviegenrename, bookingyn, releasedate, viewgradenameus ) )
 #
-# def func_lotte_boxoffice():
+# 영화 / 박스 오피스 (http://www.lottecinema.co.kr/LCHS/Contents/Movie/Movie-List.aspx) 에서 영화데이터를 가지고 온다. (dicMovieData)
 #
 
 
-#------------------------------------------------------------------------------------------------------------------------------------------------------
-# 영화관 에서 극장데이터를 가지고 온다. (dicCinemas)
+#########################################################################################################################################
+# 영화관 (http://www.lottecinema.co.kr/LCHS/Contents/Cinema) 에서 극장데이터를 가지고 온다. (dicCinemas)
 #
-def func_lotte_cinema():
+def crawl_lotte_cinema(isPrnConsole):
+
+    print( '### 영화관 (http://www.lottecinema.co.kr/LCHS/Contents/Cinema) 에서 극장데이터를 가지고 온다. ###' )
+
+    cinema_count = 0
+
+    if isPrnConsole:  #################
+        print( '-------------------------------------' )
+        print( 'no, 코드, 스페셜관, 정렬일련번호, 극장명' )
+        print( '-------------------------------------' )
 
     specialcinemas = ["0300",  ## 스페셜관(샤롯데) 지정
                       "0941",  ## 스페셜관(수퍼플렉스 G) 지정
@@ -160,9 +178,12 @@ def func_lotte_cinema():
             sortsequence = match.value['SortSequence']
 
             i = i + 1
-            # print( str( i ) + ' :: ' + cinemaid + ' / ' + cinemanamekr)
 
             dicCinemas[cinemaid] = ['Y', sortsequence, cinemanamekr]  # 극장(스페셜괌)정보저장
+
+            if isPrnConsole:  #################
+                cinema_count += 1
+                print( '{} : {},{},{},{}'.format( cinema_count, cinemaid, 'Y', sortsequence, cinemanamekr ) )
 
     detaildivisioncodes = ["1",   ## 서울
                            "2",   ## 경기/인천
@@ -200,16 +221,27 @@ def func_lotte_cinema():
             sortsequence = match.value['SortSequence']
 
             i = i + 1
-            # print( str( i ) + ' :: ' + cinemaid + ' / ' + cinemaname )
 
             dicCinemas[cinemaid] = ['N', sortsequence, cinemaname]  # 극장 정보저장
 
+            if isPrnConsole:  #################
+                cinema_count += 1
+                print( '{} : {},{},{},{}'.format( cinema_count, cinemaid, 'N', sortsequence, cinemanamekr ) )
+
 #
-# def func_lotte_cinema():
+# 영화관 (http://www.lottecinema.co.kr/LCHS/Contents/Cinema) 에서 극장데이터를 가지고 온다. (dicCinemas)
 #
 
 
-def func_lotte_ticketingdata():
+#########################################################################################################################################
+# 영화관 (http://www.lottecinema.co.kr/LCWS/Ticketing/TicketingData.aspx) 에서 극장데이터를 가지고 온다. (dicTicketingData)
+#
+def crawl_lotte_ticketingdata(isPrnConsole):
+
+    print( '### 영화관 (http://www.lottecinema.co.kr/LCWS/Ticketing/TicketingData.aspx) 에서 극장데이터를 가지고 온다. ###' )
+
+    movie_count = 0
+    ticket_count = 0
 
     days = []
 
@@ -218,8 +250,8 @@ def func_lotte_ticketingdata():
     date3 = date2 + datetime.timedelta( days=1 )
 
     days.append( '{:04d}-{:02d}-{:02d}'.format( date1.year, date1.month, date1.day ) )  ## 오늘의 날짜
-    days.append( '{:04d}-{:02d}-{:02d}'.format( date2.year, date2.month, date2.day ) )  ## 오늘+1의 날짜
-    days.append( '{:04d}-{:02d}-{:02d}'.format( date3.year, date3.month, date3.day ) )  ## 오늘+2의 날짜
+    #days.append( '{:04d}-{:02d}-{:02d}'.format( date2.year, date2.month, date2.day ) )  ## 오늘+1의 날짜
+    #days.append( '{:04d}-{:02d}-{:02d}'.format( date3.year, date3.month, date3.day ) )  ## 오늘+2의 날짜
 
     # 3일간 자료 가져오기
     for today in days:
@@ -254,40 +286,60 @@ def func_lotte_ticketingdata():
             jsonpath_expr1 = parse( 'PlaySeqsHeader.Items[*]' )
             jsonpath_expr2 = parse( 'PlaySeqs.Items[*]' )
 
-            i = 0
+            if isPrnConsole:  #################
+                print( '-------------------------------------' )
+                print( '일자, no, 코드, 영화명, 장르, 더빙/자막' )
+                print( '-------------------------------------' )
+
+            moviecode_old = ''
             for match1 in jsonpath_expr1.find( json_obj ):
                 moviecode  = match1.value['MovieCode']
-                gubun      = match1.value['TranslationDivisionNameKR']  # 더빙/자막
-                moviename  = match1.value['MovieNameKR']                # 영화명
-                filmnamekr = match1.value['FilmNameKR']                 # 필름종류
 
-                dicMovies[moviecode] = [moviename, filmnamekr, gubun]  # 영화정보를 저장한다. 영화명 + 필름종류 + 더빙/자막
-                i = i + 1
-                # print(str(i)+' :: '+match1.value['CinemaNameKR']+' / '+moviecode+' / '+' / '+ moviename +' / '+gubun)
+                if moviecode_old != moviecode :
+                    gubun      = match1.value['TranslationDivisionNameKR']  # 더빙/자막
+                    moviename  = match1.value['MovieNameKR']                # 영화명
+                    filmnamekr = match1.value['FilmNameKR']                 # 필름종류
 
-                # for match1_1 in jsonpath_expr1.find( json_obj ):
-                # i = i + 1
-                # print( i)
+                    dicMovies[moviecode] = [moviename, filmnamekr, gubun]  # 영화정보를 저장한다. 영화명 + 필름종류 + 더빙/자막
 
-            i = 0
+                    # for match1_1 in jsonpath_expr1.find( json_obj ):
+                    # i = i + 1
+                    # print( i)
+                    if isPrnConsole:  #################
+                        movie_count += 1
+                        print( '{},{} : {},{},{},{}'.format( today, movie_count, moviecode, moviename, filmnamekr, gubun ) )
+
+                    moviecode_old = moviecode
+            #
+
+            if isPrnConsole:  #################
+                print( '-------------------------------------' )
+                print( '일자, no, 티켓코드, 극장명, 상영관그룹명, 상영관명, 영화명, 영화구분, 개봉일, 시작시간, 끝시간, 예약좌석수, 총좌석수' )
+                print( '-------------------------------------' )
+            #
+
             for match2 in jsonpath_expr2.find( json_obj ):
-                cinemanamekr          = match2.value['CinemaNameKR']           # 극장명
+                cinemanamekr          = match2.value['CinemaNameKR']            # 극장명
                 sequencenogroupnamekr = match2.value['SequenceNoGroupNameKR']  # 상영관그룹명
-                screenid              = match2.value['ScreenID']               # 상영관 코드
-                screennamekr          = match2.value['ScreenNameKR']           # 상영관명
-                moviecode             = match2.value['MovieCode']              # 영화코드 [영화명 + 필름종류 + 더빙/자막]
-                bookingseatcount      = match2.value['BookingSeatCount']       # 예약좌석수
-                totalseatcount        = match2.value['TotalSeatCount']         # 총좌석수
-                playdt                = match2.value['PlayDt']                 # 상영일자
+                screenid              = match2.value['ScreenID']                 # 상영관 코드
+                screennamekr          = match2.value['ScreenNameKR']            # 상영관명
+                moviecode             = match2.value['MovieCode']                # 영화코드 [영화명 + 필름종류 + 더빙/자막]
+                bookingseatcount      = match2.value['BookingSeatCount']        # 예약좌석수
+                totalseatcount        = match2.value['TotalSeatCount']          # 총좌석수
+                playdt                = match2.value['PlayDt']                   # 상영일자
                 playdt                = playdt[0:4] + playdt[5:7] + playdt[8:10]
-                starttime             = match2.value['StartTime']              # 상영시간(시작)
-                endtime               = match2.value['EndTime']                # 상영시간(끝)
+                starttime             = match2.value['StartTime']                # 상영시간(시작)
+                endtime               = match2.value['EndTime']                   # 상영시간(끝)
                 # print(dicMovies[moviecode][1]+':'+dicMovies[moviecode][0])
 
                 ticketcode = str(screenid) + str(moviecode)
                 dicTicketingData[ticketcode] = [cinemanamekr, sequencenogroupnamekr, screennamekr, dicMovies[moviecode][0], dicMovies[moviecode][1], dicMovies[moviecode][2], playdt, starttime, endtime, bookingseatcount, totalseatcount]
 
-                i = i + 1
+                if isPrnConsole:  #################
+                    ticket_count += 1
+                    print( '{},{} : {},{},{},{},{},{},{},{},{},{},{},{}'.format( today, ticket_count, ticketcode, cinemanamekr, sequencenogroupnamekr, screennamekr, dicMovies[moviecode][0], dicMovies[moviecode][1], dicMovies[moviecode][2], playdt, starttime, endtime, bookingseatcount, totalseatcount ) )
+                #
+            #
                 # print( str( i ) + ' :: '
                 #        + playdt + ' / '  # 상영일자
                 #        + cinemanamekr + ' / '  # 극장명
@@ -305,8 +357,14 @@ def func_lotte_ticketingdata():
                 #     print(movkey +':'+ str(dicMovies[movkey]))
                 # print('----------------------------------------')
                 #
+#
+# 영화관 (http://www.lottecinema.co.kr/LCWS/Ticketing/TicketingData.aspx) 에서 극장데이터를 가지고 온다. (dicTicketingData)
+#
 
 
+#########################################################################################################################################
+# LOTTE 클로링 정보 올리기..
+#
 def func_lotte_upload():
 
     fields = { "moviedata": str( dicMovieData )
@@ -319,19 +377,34 @@ def func_lotte_upload():
 
     data = r.data.decode( 'utf-8' )
     print( data )
+#
+# LOTTE 클로링 정보 올리기..
+#
+
+
+
+#########################################################################################################################################
+#########################################################################################################################################
+#########################################################################################################################################
+#########################################################################################################################################
 
 if  __name__ == '__main__':
 
-    func_lotte_boxoffice()
+    crawl_lotte_boxoffice(False) # 영화 / 박스 오피스(http://www.lottecinema.co.kr/LCHS/Contents/Movie/Movie-List.aspx) 에서 영화데이터를 가지고 온다. (dicMovieData)
 
-    func_lotte_cinema()
+    crawl_lotte_cinema(False) # 영화관 (http://www.lottecinema.co.kr/LCHS/Contents/Cinema) 에서 극장데이터를 가지고 온다. (dicCinemas)
     # for dicCinema in dicCinemas:
     #     print( dicCinema + ' // ' + str( dicCinemas[dicCinema] ) )
 
-    func_lotte_ticketingdata()
+    crawl_lotte_ticketingdata(True) # 영화관 (http://www.lottecinema.co.kr/LCWS/Ticketing/TicketingData.aspx) 에서 극장데이터를 가지고 온다. (dicTicketingData)
     # for dicMovie in dicMovies:
     #     print( dicMovie + ' // ' + str( dicMovies[dicMovie] ) )
     # for dicTicketingDatum in dicTicketingData:
     #     print( dicTicketingDatum + ' // ' + str( dicTicketingData[dicTicketingDatum] ) )
 
     func_lotte_upload()
+
+#########################################################################################################################################
+#########################################################################################################################################
+#########################################################################################################################################
+#########################################################################################################################################
