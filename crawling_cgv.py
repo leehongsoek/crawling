@@ -119,7 +119,7 @@ def crawl_cgv_moviechart():
 #########################################################################################################################################
 # 영화/무비파인더(http://www.cgv.co.kr/movies/finder.aspx) 에서 영화데이터를 가지고 온다. (dicMovies)
 #
-def crawl_cgv_moviefinder():
+def crawl_cgv_moviefinder(isPrnConsole):
 
     print( '### 영화/무비파인더(http://www.cgv.co.kr/movies/finder.aspx) ###' )
 
@@ -130,9 +130,10 @@ def crawl_cgv_moviefinder():
 
     year_from = date2.year ## 1년전 개봉작부터...
 
-    print( '-------------------------------------' )
-    print( 'no, 코드, 영화명, 개봉일자' )
-    print( '-------------------------------------' )
+    if isPrnConsole:
+        print( '-------------------------------------' )
+        print( 'no, 코드, 영화명, 개봉일자' )
+        print( '-------------------------------------' )
 
     # 1 ~ 페이지 에서 부터 영화정보 (코드+이름+개봉일) 를 가지고 온다...
     i = 0
@@ -207,10 +208,13 @@ def crawl_cgv_moviefinder():
 
                             #print( ' +{}+ '.format( releasedate ) )
 
-                    mov_count += 1
+                    if isPrnConsole:
+                        mov_count += 1
 
                     dicMovies[moviecode] = [moviename, releasedate]  # 영화데이터 정보
-                    print( '{} : {},{},{}'.format( mov_count, moviecode, moviename, releasedate ) )
+
+                    if isPrnConsole:
+                        print( '{} : {},{},{}'.format( mov_count, moviecode, moviename, releasedate ) )
 #
 # 영화/무비파인더(http://www.cgv.co.kr/movies/finder.aspx) 에서 영화데이터를 가지고 온다. (dicMovies)
 #
@@ -220,7 +224,7 @@ def crawl_cgv_moviefinder():
 #########################################################################################################################################
 # 예매/상영시간표(http://www.cgv.co.kr/reserve/show-times/) 극장정보를 가지고 온다. (dicTheaters)
 #
-def crawl_cgv_theaters():
+def crawl_cgv_theaters(isPrnConsole):
     
     print( '### 예매/상영시간표(http://www.cgv.co.kr/reserve/show-times/) ###' )
 
@@ -232,9 +236,10 @@ def crawl_cgv_theaters():
     data = r.data.decode( 'utf-8' )
     # print(data)
 
-    print( '-------------------------------------' )
-    print( 'no, 코드, 지역명, 극장명' )
-    print( '-------------------------------------' )
+    if isPrnConsole:
+        print( '-------------------------------------' )
+        print( 'no, 코드, 지역명, 극장명' )
+        print( '-------------------------------------' )
 
     data_lines = data.splitlines()
 
@@ -274,22 +279,24 @@ def crawl_cgv_theaters():
                     theatercode = theater['TheaterCode'] # 극장코드
                     theatername = theater['TheaterName'] # 극장면
 
-                    theater_count += 1
+                    if isPrnConsole:
+                        theater_count += 1
 
                     dicTheaters[theatercode] = [regioncode, dicRegions[regioncode], theatername]  # 극장코드 정보 추가 (지역코드+지역명+극장명)
-                    print( '{} : {},{},{}'.format( theater_count, theatercode, dicRegions[regioncode], theatername ) )
+                    if isPrnConsole:
+                        print( '{} : {},{},{}'.format( theater_count, theatercode, dicRegions[regioncode], theatername ) )
 
+    if isPrnConsole:
+        region_count = 0
+        print( '-------------------------------------' )
+        print( 'no, 코드, 지역명' )
+        print( '-------------------------------------' )
 
-    region_count = 0
-    print( '-------------------------------------' )
-    print( 'no, 코드, 지역명' )
-    print( '-------------------------------------' )
+        for region in dicRegions:
 
-    for region in dicRegions:
+            region_count += 1
 
-        region_count += 1
-
-        print('{} : {},{}'.format(region_count,region,dicRegions[region]))
+            print('{} : {},{}'.format(region_count,region,dicRegions[region]))
 #
 # 예매/상영시간표(http://www.cgv.co.kr/reserve/show-times/) 극장정보를 가지고 온다. (dicTheaters)
 #
@@ -299,7 +306,9 @@ def crawl_cgv_theaters():
 #########################################################################################################################################
 # 예매/상영시간표(http://www.cgv.co.kr/reserve/show-times/)의 프래임에서 상영정보를 가지고 온다. (dicTicketMovies)
 #
-def crawl_cgv_showtimes():
+def crawl_cgv_showtimes(isPrnConsole):
+
+    print( '### 예매/상영시간표의 프레임 (http://www.cgv.co.kr/reserve/show-times/iframeTheater.aspx?areacode=&theatercode=&date=) ###' )
 
     days = []
 
@@ -314,17 +323,24 @@ def crawl_cgv_showtimes():
 
     # 3일간 자료 가져오기
     for today in days:
-        # if  today!='{:04d}{:02d}{:02d}'.format( date1.year, date1.month, date1.day ):  # 일단 오늘 자료만 가지고 온다.
-        #     continue
+
+        if  today!='{:04d}{:02d}{:02d}'.format( date1.year, date1.month, date1.day ):  # 일단 오늘 자료만 가지고 온다.
+            continue
 
         # 극장을 하나씩 순회한다.
         for theaterkey in dicTheaters.keys():
 
-            # if  theaterkey != '0121': # 일단 특정극장만
-            #     continue
+            #--#
+            if  theaterkey != '0121': # 일단 특정극장만
+                 continue
+
+            if isPrnConsole:
+                print( '-------------------------------------' )
+                print( '{}일 : {},{}'.format( today, dicTheaters[theaterkey][1], dicTheaters[theaterkey][2] ) )
+                print( '-------------------------------------' )
 
             url = 'http://www.cgv.co.kr/common/showtimes/iframeTheater.aspx?areacode='+dicTheaters[theaterkey][0]+'&theatercode='+theaterkey+'&date='+days[0]+''
-            # print(url)
+            #print(url)
             r = http.request( 'GET', url )
 
             data = r.data.decode( 'utf-8' )
@@ -396,7 +412,7 @@ def crawl_cgv_showtimes():
                         if k == 3:
                             totalseat = tag3.text.strip().replace("\r\n", "").split( )
                             totalseat = totalseat[1]
-                        # print( str(j) + ' / ' + tag3.text.strip().replace("\r\n", "") )
+                            # print( str(j) + ' / ' + tag3.text.strip().replace("\r\n", "") )
 
                     dicTicketTiomes = {}  #
 
@@ -450,8 +466,14 @@ def crawl_cgv_showtimes():
 
                     dicTicketRooms[j] = [filmtype, roomfloor, totalseat, dicTicketTiomes]
 
-                print(dicTicketRooms)
+                    if isPrnConsole:  #################
+                        print( dicTicketRooms )
+
+
                 dicTicketMovies[moviecode] = [today, moviename, moviegrade, movieplaying, moviegenre, movieruntime, moviereleasedate, dicTicketRooms]
+
+                if isPrnConsole:#################
+                    print(dicTicketMovies)
 
             dicTicketingData[theaterkey] = dicTicketMovies
 #
@@ -488,11 +510,11 @@ if  __name__ == '__main__':
 
     ####crawl_cgv_moviechart() # 영화/무비차트(http://www.cgv.co.kr/movies/?ft=0) 애서 영화정보를 가지고온다. (dicMovies)
 
-    ##crawl_cgv_moviefinder() # 영화/무비파인더(http://www.cgv.co.kr/movies/finder.aspx) 에서 영화데이터를 가지고 온다. (dicMovies)
+    ##crawl_cgv_moviefinder(True) # 영화/무비파인더(http://www.cgv.co.kr/movies/finder.aspx) 에서 영화데이터를 가지고 온다. (dicMovies)
 
-    ##crawl_cgv_theaters() # 예매/상영시간표(http://www.cgv.co.kr/reserve/show-times/) 극장정보를 가지고 온다. (dicTheaters)
+    crawl_cgv_theaters(False) # 예매/상영시간표(http://www.cgv.co.kr/reserve/show-times/) 극장정보를 가지고 온다. (dicTheaters)
 
-    crawl_cgv_showtimes() # 예매/상영시간표(http://www.cgv.co.kr/reserve/show-times/)의 프래임에서 상영정보를 가지고 온다. (dicTicketMovies)
+    crawl_cgv_showtimes(True) # 예매/상영시간표(http://www.cgv.co.kr/reserve/show-times/)의 프래임에서 상영정보를 가지고 온다. (dicTicketMovies)
 
     crawl_cgv_upload()
 #########################################################################################################################################
