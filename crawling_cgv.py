@@ -279,11 +279,11 @@ def crawl_cgv_theaters():
                     dicTheaters[theatercode] = [regioncode, dicRegions[regioncode], theatername]  # 극장코드 정보 추가 (지역코드+지역명+극장명)
                     print( '{} : {},{},{}'.format( theater_count, theatercode, dicRegions[regioncode], theatername ) )
 
+
     region_count = 0
     print( '-------------------------------------' )
     print( 'no, 코드, 지역명' )
     print( '-------------------------------------' )
-
 
     for region in dicRegions:
 
