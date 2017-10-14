@@ -32,6 +32,8 @@ dicTicketingData = {}  # 티켓팅 정보
 #
 def crawl_mega_movie(isPrnConsole):
 
+    print( '### 영화(http://www.megabox.co.kr/?menuId=movie) 에서 영화데이터를 가지고 온다. ###' )
+
     mov_count = 0
 
     url = 'http://www.megabox.co.kr/pages/movie/Movie_List.jsp'
@@ -46,7 +48,7 @@ def crawl_mega_movie(isPrnConsole):
     soup = BeautifulSoup( r.text, 'html.parser' )
 
 
-    if isPrnConsole:
+    if isPrnConsole: #################
         print( '-------------------------------------' )
         print( 'no, 코드, 개봉일자, 구분, 영화명' )
         print( '-------------------------------------' )
@@ -109,13 +111,13 @@ def crawl_mega_movie(isPrnConsole):
                             releasedate = item_value[2:6] +item_value[7:9] +item_value[10:12]
             #
 
-            if isPrnConsole:
+            if isPrnConsole: #################
                 mov_count += 1
 
             dicMovies[moviecode] = [releasedate, moviegbn, moviename]  # 영화데이터 정보
 
-            if isPrnConsole:
-                print( '{} : {},{},{},{}'.format( mov_count, moviecode, releasedate, moviegbn, moviename) )
+            if isPrnConsole: #################
+                print( '{} : {}, {}, {}, {}'.format( mov_count, moviecode, releasedate, moviegbn, moviename) )
 #
 # 영화(http://www.megabox.co.kr/?menuId=movie) 에서 영화데이터를 가지고 온다. (dicMovies)
 #
@@ -125,6 +127,17 @@ def crawl_mega_movie(isPrnConsole):
 # 영화관(http://www.megabox.co.kr/?menuId=theater)에서 지역데이터,영화관데이터를 가지고 온다. (dicRegions,dicCinemas)
 #
 def crawl_mega_cinema(isPrnConsole):
+
+    print( '### 영화관(http://www.megabox.co.kr/?menuId=theater)에서 지역데이터,영화관데이터를 가지고 온다. ###' )
+
+    region_count = 0
+    cinema_count = 0
+
+    if isPrnConsole: #################
+        print( '-------------------------------------' )
+        print( 'no, 코드, 지역명' )
+        print( '+- no, 코드, 극장명' )
+        print( '-------------------------------------' )
 
     url = urlopen( "http://www.megabox.co.kr/?menuId=theater" )
     data = url.read().decode( 'utf-8' )
@@ -146,7 +159,10 @@ def crawl_mega_cinema(isPrnConsole):
         # print('-------------')
 
     for dicRegion in dicRegions:
-        # print( '{} {}'.format( dicRegion, dicRegions[dicRegion] ) )
+
+        if isPrnConsole: #################
+            region_count += 1
+            print( '{} : {},{}'.format( region_count, dicRegion, dicRegions[dicRegion] ) )
 
         url = 'http://www.megabox.co.kr/DataProvider'
         fields = {"_command": 'Cinema.getCinemasInRegion'
@@ -167,8 +183,11 @@ def crawl_mega_cinema(isPrnConsole):
             cinemacode    = str( match.value['cinemaCode'] )
             kofcinemacode = str( match.value['kofCinemaCode'] )
 
-            # print('{} {}'.format(cinemacode,cinemaname))
             dicCinemas[cinemacode] = [dicRegion, cinemaname, kofcinemacode]
+
+            if isPrnConsole:  #################
+                cinema_count += 1
+                print('{} : {}, {}'.format(cinema_count, cinemacode,cinemaname))
 #
 # 영화관(http://www.megabox.co.kr/?menuId=theater)에서 지역데이터,영화관데이터를 가지고 온다. (dicRegions,dicCinemas)
 #
@@ -180,14 +199,21 @@ def crawl_mega_cinema(isPrnConsole):
 #
 def crawl_mega_schedule(isPrnConsole):
 
-    for count in range( 0, 3 ):  # 3d일간
+    print( '### 영화관(http://www.megabox.co.kr/?menuId=theater)에서 영화관에 스케줄데이터를 가지고 온다. ###' )
+
+    if isPrnConsole:  #################
+        print( '-------------------------------------' )
+        print( '일자, 지역명, 극장명' )
+        print( '-------------------------------------' )
+
+    for count in range( 0, 1):  # 3일간
 
         dicPlaydate = {}
 
-        for dicCinema in dicCinemas:
-            # print( str( count ) )
+        for dicCinema in dicCinemas: # 극장들을 순환
+            #print( dicRegions[dicCinemas[dicCinema][0]]+','+ dicCinemas[dicCinema][1] )
 
-            # if dicCinema != '6902':  continue # 제주아라....
+            if dicCinema != '6902':  continue # 제주아라....
 
             dicSchMovies = {}    # 스케쥴 > 극장 / 영화 정보
             dicSchRooms = {}     # 스케쥴 > 관 정보
@@ -206,8 +232,10 @@ def crawl_mega_schedule(isPrnConsole):
             for tag1 in tags1:
                 val = [v[0:4] + v[5:7] + v[8:10]  for k,v in tag1.attrs.items() if (k=='value')]
                 playdate = val[0]
-                # print(playdate)
+                #print(playdate)
 
+                if isPrnConsole:  #################
+                    print( '{} : {}, {}'.format( playdate, dicRegions[dicCinemas[dicCinema][0]], dicCinemas[dicCinema][1] ) )
 
             moviecode = ''
             moviegbn = ''
@@ -264,10 +292,9 @@ def crawl_mega_schedule(isPrnConsole):
                     if len( tags3 ) > 0:   # print( '일반' )
 
                         for tag3 in tags3:
-                            onclick = tag3['onclick']
-                            # hrefs = href.split( '=' )
-                            # print(onclick)
-                            moviecode = onclick[24:30]
+                            onclick = ''.join( tag3['onclick'].split() ) #  모든 공백 문자를 제거하는 경우
+                            #print(onclick)
+                            moviecode = onclick[29:35]
 
                             tags4 = tag3.select( "span.hover_time" )
                             # print(tags4)
@@ -343,7 +370,7 @@ def crawl_mega_schedule(isPrnConsole):
 
         dicTicketingData[playdate] = dicPlaydate
 
-    # for count in range( 0, 3 ):  # 3d일간
+    # for count in range( 0, 3 ):  # 3일간
 
     # print(dicTicketingData)
 
@@ -380,11 +407,11 @@ def crawl_mega_upload():
 
 if  __name__ == '__main__':
 
-    crawl_mega_movie(True) # 영화(http://www.megabox.co.kr/?menuId=movie) 에서 영화데이터를 가지고 온다. (dicMovies)
+    crawl_mega_movie(False) # 영화(http://www.megabox.co.kr/?menuId=movie) 에서 영화데이터를 가지고 온다. (dicMovies)
 
-    #crawl_mega_cinema(True) # 영화관(http://www.megabox.co.kr/?menuId=theater)에서 지역데이터,영화관데이터를 가지고 온다. (dicRegions,dicCinemas)
+    crawl_mega_cinema(False) # 영화관(http://www.megabox.co.kr/?menuId=theater)에서 지역데이터,영화관데이터를 가지고 온다. (dicRegions,dicCinemas)
 
-    #crawl_mega_schedule(True) # 영화관(http://www.megabox.co.kr/?menuId=theater)에서 영화관에 스케줄데이터를 가지고 온다. (dicRegions,dicCinemas)
+    crawl_mega_schedule(True) # 영화관(http://www.megabox.co.kr/?menuId=theater)에서 영화관에 스케줄데이터를 가지고 온다. (dicRegions,dicCinemas)
 
     # print( '-------------------------------------------------------------dicRegions' )
     # for k, v in dicRegions.items():
