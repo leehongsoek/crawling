@@ -140,7 +140,7 @@ def crawl_cgv_moviefinder():
 
         i = i + 1
 
-        # if i != 1:
+        # if i != 1:       # 일단 하나만 가지고 온다.
         #     continue
 
         url = 'http://www.cgv.co.kr/movies/finder.aspx?s=true&sdate='+str(year_from)+'&edate=2020&page='+str(i) # 무비파인더 에서 영화 리스트
@@ -316,6 +316,7 @@ def crawl_cgv_showtimes():
     for today in days:
         # if  today!='{:04d}{:02d}{:02d}'.format( date1.year, date1.month, date1.day ):  # 일단 오늘 자료만 가지고 온다.
         #     continue
+
 
         for theaterkey in dicTheaters.keys():
 
