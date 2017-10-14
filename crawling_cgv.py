@@ -303,9 +303,9 @@ def crawl_cgv_showtimes():
 
     days = []
 
-    date1 = datetime.date.today()  ## 오늘자 날짜객체
-    date2 = date1 + datetime.timedelta( days=1 )
-    date3 = date2 + datetime.timedelta( days=1 )
+    date1 = datetime.date.today()                 ## 오늘자 날짜객체
+    date2 = date1 + datetime.timedelta( days=1 )  ## +1 일
+    date3 = date2 + datetime.timedelta( days=1 )  ## +2 일
 
     days.append( '{:04d}{:02d}{:02d}'.format( date1.year, date1.month, date1.day ) )  ## 오늘의 날짜
     days.append( '{:04d}{:02d}{:02d}'.format( date2.year, date2.month, date2.day ) )  ## 오늘+1의 날짜
