@@ -138,7 +138,7 @@ def crawl_cgv_moviefinder(isPrnConsole):
     #####year_from = date2.year ## 1년전 개봉작부터...
     year_from = 1960
 
-    if isPrnConsole:
+    if isPrnConsole: #################
         print( '-------------------------------------' )
         print( 'no, 코드, 영화명, 개봉일자' )
         print( '-------------------------------------' )
@@ -197,12 +197,12 @@ def crawl_cgv_moviefinder(isPrnConsole):
 
                                 # print( ' +{}+ '.format( releasedate ) )
 
-                        if isPrnConsole:
+                        if isPrnConsole: #################
                             mov_count += 1
 
                         dicMovies[moviecode] = [moviename, releasedate]  # 영화데이터 정보
 
-                        if isPrnConsole:
+                        if isPrnConsole: #################
                             print( '{} : {},{},{}'.format( mov_count, moviecode, moviename, releasedate ) )
 
         if i > 0: # 검색후 n 페이지
@@ -257,12 +257,12 @@ def crawl_cgv_moviefinder(isPrnConsole):
 
                                 #print( ' +{}+ '.format( releasedate ) )
 
-                        if isPrnConsole:
+                        if isPrnConsole: #################
                             mov_count += 1
 
                         dicMovies[moviecode] = [moviename, releasedate]  # 영화데이터 정보
 
-                        if isPrnConsole:
+                        if isPrnConsole: #################
                             print( '{} : {},{},{}'.format( mov_count, moviecode, moviename, releasedate ) )
         i = i + 1
 #
@@ -286,7 +286,7 @@ def crawl_cgv_theaters(isPrnConsole):
     data = r.data.decode( 'utf-8' )
     # print(data)
 
-    if isPrnConsole:
+    if isPrnConsole: #################
         print( '-------------------------------------' )
         print( 'no, 코드, 지역명, 극장명' )
         print( '-------------------------------------' )
@@ -329,14 +329,14 @@ def crawl_cgv_theaters(isPrnConsole):
                     theatercode = theater['TheaterCode'] # 극장코드
                     theatername = theater['TheaterName'] # 극장면
 
-                    if isPrnConsole:
+                    if isPrnConsole: #################
                         theater_count += 1
 
                     dicTheaters[theatercode] = [regioncode, dicRegions[regioncode], theatername]  # 극장코드 정보 추가 (지역코드+지역명+극장명)
-                    if isPrnConsole:
+                    if isPrnConsole: #################
                         print( '{} : {},{},{}'.format( theater_count, theatercode, dicRegions[regioncode], theatername ) )
 
-    if isPrnConsole:
+    if isPrnConsole: #################
         region_count = 0
         print( '-------------------------------------' )
         print( 'no, 코드, 지역명' )
@@ -385,7 +385,7 @@ def crawl_cgv_showtimes(isPrnConsole):
             #if  theaterkey != '0121': # 일단 특정극장(cgv제주)만
             #     continue
 
-            if isPrnConsole:
+            if isPrnConsole: #################
                 print( '-------------------------------------' )
                 print( '{} 일 : {},{}'.format( today, dicTheaters[theaterkey][1], dicTheaters[theaterkey][2] ) )
                 print( '-------------------------------------' )
@@ -523,7 +523,7 @@ def crawl_cgv_showtimes(isPrnConsole):
 
                 dicTicketMovies[moviecode] = [today, moviename, moviegrade, movieplaying, moviegenre, movieruntime, moviereleasedate, dicTicketRooms]
 
-                if isPrnConsole:#################
+                if isPrnConsole: #################
                     print(dicTicketMovies)
 
             dicTicketingData[theaterkey] = dicTicketMovies
