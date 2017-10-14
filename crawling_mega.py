@@ -13,7 +13,7 @@ from bs4 import BeautifulSoup
 import requests # http://docs.python-requests.org/en/master/user/quickstart/ pip install requests
 from multiprocessing import Queue # python Setup.py build # exe 파일 생성을 위해 꼭 필요
 
-#------------------------------------------------------------------------------------------------------------------------------------------------------
+#########################################################################################################################################
 # 공통 변수......
 #
 dicMovies = {}   # 영화 코드 정보
@@ -30,9 +30,9 @@ dicTicketingData = {}  # 티켓팅 정보
 #########################################################################################################################################
 # 영화(http://www.megabox.co.kr/?menuId=movie) 에서 영화데이터를 가지고 온다. (dicMovies)
 #
-def crawl_mega_movie():
-#
-#
+def crawl_mega_movie(isPrnConsole):
+
+    mov_count = 0
 
     url = 'http://www.megabox.co.kr/pages/movie/Movie_List.jsp'
     fields = {"menuId": "movie"
@@ -45,19 +45,26 @@ def crawl_mega_movie():
 
     soup = BeautifulSoup( r.text, 'html.parser' )
 
+
+    if isPrnConsole:
+        print( '-------------------------------------' )
+        print( 'no, 코드, 개봉일자, 구분, 영화명' )
+        print( '-------------------------------------' )
+
     tags1 = soup.select( "li.item > div.front-info" )
     for tag1 in tags1:
-        # print( tag1 )
-        # print( '-------------------------------------------------------------' )
+        #print( tag1 )
+        #print( '-------------------------------------------------------------' )
+
 
         releasedate = ''
         moviegbn = ''
         moviename = ''
 
-        tags2 = tag1.select( "div.d_day" )
-        for tag2 in tags2:
-            releasedate = tag2.text.strip().split(' ')
-            releasedate = releasedate[0][0:4] + releasedate[0][5:7] + releasedate[0][8:10]
+        #tags2 = tag1.select( "div.d_day" )
+        #for tag2 in tags2:
+        #    releasedate = tag2.text.strip().split(' ')
+        #    releasedate = releasedate[0][0:4] + releasedate[0][5:7] + releasedate[0][8:10]
             # print( releasedate )
 
         tags2 = tag1.select( "div.movie_info > h3.sm_film > span.film_rate" )
@@ -76,18 +83,49 @@ def crawl_mega_movie():
             results = r.findall( tag2['onclick'] )
             for result in results:
                 moviecode = result
-            # print( moviecode )
+                #print( moviecode )
+
+                url = 'http://www.megabox.co.kr/pages/movie/Movie_Detail.jsp'
+                fields = {"code": moviecode}
+                in_r = requests.post( url, fields )
+                #print( in_r.text )
+
+                in_soup = BeautifulSoup( in_r.text, 'html.parser' )
+
+                in_tags1 = in_soup.select( "ul.info_wrap > li" )
+                for in_tag1 in in_tags1:
+                    #print(in_tag1)
+
+                    item_value = ''
+
+                    in_tags2 = in_tag1.select( "strong" )
+                    for in_tag2 in in_tags2:
+                        item_name = in_tag2.text.strip()
+                        #print(item_name)
+
+                        if item_name == '개봉일':
+                            in_tag2.extract()  # 자식태그를 제거한다.
+                            item_value = in_tag1.text.strip()
+                            releasedate = item_value[2:6] +item_value[7:9] +item_value[10:12]
+            #
+
+            if isPrnConsole:
+                mov_count += 1
 
             dicMovies[moviecode] = [releasedate, moviegbn, moviename]  # 영화데이터 정보
+
+            if isPrnConsole:
+                print( '{} : {},{},{},{}'.format( mov_count, moviecode, releasedate, moviegbn, moviename) )
 #
-# def func_mega_movie():
+# 영화(http://www.megabox.co.kr/?menuId=movie) 에서 영화데이터를 가지고 온다. (dicMovies)
 #
 
 
-#------------------------------------------------------------------------------------------------------------------------------------------------------
-# 영화관에서 지역데이터,영화관데이터를 가지고 온다. (dicRegions,dicCinemas)
+#########################################################################################################################################
+# 영화관(http://www.megabox.co.kr/?menuId=theater)에서 지역데이터,영화관데이터를 가지고 온다. (dicRegions,dicCinemas)
 #
-def func_mega_cinema():
+def crawl_mega_cinema(isPrnConsole):
+
     url = urlopen( "http://www.megabox.co.kr/?menuId=theater" )
     data = url.read().decode( 'utf-8' )
     # print(data)
@@ -132,15 +170,15 @@ def func_mega_cinema():
             # print('{} {}'.format(cinemacode,cinemaname))
             dicCinemas[cinemacode] = [dicRegion, cinemaname, kofcinemacode]
 #
-# def func_mega_cinema():
+# 영화관(http://www.megabox.co.kr/?menuId=theater)에서 지역데이터,영화관데이터를 가지고 온다. (dicRegions,dicCinemas)
 #
 
 
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------
-# 영화관에서 영화관에 스케줄데이터를 가지고 온다. (dicRegions,dicCinemas)
+# 영화관(http://www.megabox.co.kr/?menuId=theater)에서 영화관에 스케줄데이터를 가지고 온다. (dicRegions,dicCinemas)
 #
-def func_mega_schedule():
+def crawl_mega_schedule(isPrnConsole):
 
     for count in range( 0, 3 ):  # 3d일간
 
@@ -310,14 +348,14 @@ def func_mega_schedule():
     # print(dicTicketingData)
 
 #
-#   def func_mega_cinema():
+# 영화관(http://www.megabox.co.kr/?menuId=theater)에서 영화관에 스케줄데이터를 가지고 온다. (dicRegions,dicCinemas)
 #
 
 
-
-
-
-def func_mega_upload():
+#########################################################################################################################################
+# MAGA 클로링 정보 올리기..
+#
+def crawl_mega_upload():
 
     fields = { "movies": str( dicMovies )
              , "regions": str( dicRegions )
@@ -328,14 +366,25 @@ def func_mega_upload():
 
     r = requests.post( url, fields )
 
-    # print( '[',r.text,']' )
+    print( '[',r.text,']' )
 #
+# MAGA 클로링 정보 올리기..
+#
+
+
+
+#########################################################################################################################################
+#########################################################################################################################################
+#########################################################################################################################################
+#########################################################################################################################################
 
 if  __name__ == '__main__':
 
-    crawl_mega_movie()
-    func_mega_cinema()
-    func_mega_schedule()
+    crawl_mega_movie(True) # 영화(http://www.megabox.co.kr/?menuId=movie) 에서 영화데이터를 가지고 온다. (dicMovies)
+
+    #crawl_mega_cinema(True) # 영화관(http://www.megabox.co.kr/?menuId=theater)에서 지역데이터,영화관데이터를 가지고 온다. (dicRegions,dicCinemas)
+
+    #crawl_mega_schedule(True) # 영화관(http://www.megabox.co.kr/?menuId=theater)에서 영화관에 스케줄데이터를 가지고 온다. (dicRegions,dicCinemas)
 
     # print( '-------------------------------------------------------------dicRegions' )
     # for k, v in dicRegions.items():
@@ -356,9 +405,9 @@ if  __name__ == '__main__':
     # for k, v in dicCinemas.items():
     #     print( '{} {}'.format( k, v ) )
 
+    crawl_mega_upload()
 
-    func_mega_upload()
-
-#
-#
-#
+#########################################################################################################################################
+#########################################################################################################################################
+#########################################################################################################################################
+#########################################################################################################################################
