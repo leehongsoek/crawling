@@ -15,12 +15,19 @@ from selenium import webdriver # pip install selenium
 import urllib3  # pip install urllib3
 import json
 
+#########################################################################################################################################
+# 공통 변수......
+#
 dicMovies = {}   # 영화 코드 정보
 dicRegions = {}  # 지역코드 정보
 dicTheaters = {} # 극장코드 정보
 dicTicketingData = {}  # 티켓팅 정보
 
 http = urllib3.PoolManager()
+
+#
+#
+#
 
 #########################################################################################################################################
 # 영화/무비차트(http://www.cgv.co.kr/movies/?ft=0) 애서 영화정보를 가지고온다. (dicMovies)
