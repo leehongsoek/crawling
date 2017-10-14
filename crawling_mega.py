@@ -373,8 +373,6 @@ def crawl_mega_schedule(isPrnConsole):
 
     # for count in range( 0, 3 ):  # 3일간
 
-    # print(dicTicketingData)
-
 #
 # 영화관(http://www.megabox.co.kr/?menuId=theater)에서 영화관에 스케줄데이터를 가지고 온다. (dicRegions,dicCinemas)
 #
