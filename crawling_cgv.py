@@ -128,24 +128,25 @@ def crawl_cgv_moviefinder(isPrnConsole):
     date1 = datetime.date.today()                    ## 오늘자 날짜객체
     date2 = date1 + datetime.timedelta( days=-365 )  ## 1년전
 
-    year_from = date2.year ## 1년전 개봉작부터...
+    #####year_from = date2.year ## 1년전 개봉작부터...
+    year_from = 1960
 
     if isPrnConsole:
         print( '-------------------------------------' )
         print( 'no, 코드, 영화명, 개봉일자' )
         print( '-------------------------------------' )
 
+
     # 1 ~ 페이지 에서 부터 영화정보 (코드+이름+개봉일) 를 가지고 온다...
     i = 0
     while True:
-
-        i = i + 1
-
         # if i != 1:       # 일단 하나만 가지고 온다.
         #     continue
 
-        url = 'http://www.cgv.co.kr/movies/finder.aspx?s=true&sdate='+str(year_from)+'&edate=2020&page='+str(i) # 무비파인더 에서 영화 리스트
-
+        if i == 0: # 아무 옵션없이 첫 화면..
+            url = 'http://www.cgv.co.kr/movies/finder.aspx'
+        else:
+            url = 'http://www.cgv.co.kr/movies/finder.aspx?s=true&sdate='+str(year_from)+'&edate=2020&page='+str(i) # 무비파인더 에서 영화 리스트
         #print(url)
 
         r = http.request( 'GET', url )
@@ -155,36 +156,18 @@ def crawl_cgv_moviefinder(isPrnConsole):
 
         soup = BeautifulSoup( data, 'html.parser' )
 
-        # 아래의 선택조건에 해당하는 영화가 총 0건 검색되었습니다. 를 체크
-        find_num = 0
-        tags1 = soup.select( "h3.sub > span > strong > i" )
-        for tag1 in tags1:
-            find_num = tag1.text.strip()
-            #print( find_num )
+        if i == 0:  # 첫페이지 (검색전)
+            tags1 = soup.select( "div.sect-movie-chart > ol" )
+            for tag1 in tags1:
+                #print( tag1 )
 
-        if find_num == '0': # 아래의 선택조건에 해당하는 영화가 총 0건 검색되었습니다.
-            break
+                tags2 = tag1.select( "li" )
+                for tag2 in tags2:
+                    #print( tag2 )
 
-        tags1 = soup.select( "div.sect-search-chart > ol" )
-        for tag1 in tags1:
-
-
-            #print( tag1 )
-
-            tags2 = tag1.select( "li" )
-            for tag2 in tags2:
-                #print( tag2 )
-
-                moviecode = ''
-                moviename = ''
-                releasedate = ''
-
-                # 페이지마다 아래 테그가 추가되므로 style이 없는 건만 파싱한다.
-                # <li style="width:100%;text-align:center;padding:40px 0 40px 0;display:none">검색결과가 존재하지 않습니다.</li>
-
-                style = str(tag2.get('style'))
-                #print('style = ' + style)
-                if style == 'None':
+                    moviecode = ''
+                    moviename = ''
+                    releasedate = ''
 
                     tags3 = tag2.select( "div.box-contents > a" )
                     for tag3 in tags3:
@@ -193,28 +176,88 @@ def crawl_cgv_moviefinder(isPrnConsole):
 
                         moviecode = hrefs[1]
                         moviename = tag3.text.strip()
-                        # print( '{} {}'.format([moviecode, moviename]) )
+                        #print( '{},{}'.format(moviecode, moviename) )
+
+                        tags3 = tag2.select( "span.txt-info" )
+                        for tag3 in tags3:
+                            #for lin in tag3.text.splitlines():
+                            #     print( ' +{}+ '.format(lin.strip()) )
+                            releasedate = tag3.text.splitlines()[2].strip()
+                            if releasedate != '개봉예정':
+                                releasedate = releasedate[0:4] + releasedate[5:7] + releasedate[8:10]
+                            else:
+                                releasedate = ''
+
+                                # print( ' +{}+ '.format( releasedate ) )
+
+                        if isPrnConsole:
+                            mov_count += 1
+
+                        dicMovies[moviecode] = [moviename, releasedate]  # 영화데이터 정보
+
+                        if isPrnConsole:
+                            print( '{} : {},{},{}'.format( mov_count, moviecode, moviename, releasedate ) )
+
+        if i > 0: # 검색후 n 페이지
+            # 아래의 선택조건에 해당하는 영화가 총 0건 검색되었습니다. 를 체크
+            find_num = 0
+            tags1 = soup.select( "h3.sub > span > strong > i" )
+            for tag1 in tags1:
+                find_num = tag1.text.strip()
+                #print( find_num )
+
+            if find_num == '0': # 아래의 선택조건에 해당하는 영화가 총 0건 검색되었습니다.
+                break
+                
+            tags1 = soup.select( "div.sect-search-chart > ol" )
+            for tag1 in tags1:
+                #print( tag1 )
+
+                tags2 = tag1.select( "li" )
+                for tag2 in tags2:
+                    #print( tag2 )
+
+                    moviecode = ''
+                    moviename = ''
+                    releasedate = ''
+
+                    # 페이지마다 아래 테그가 추가되므로 style이 없는 건만 파싱한다.
+                    # <li style="width:100%;text-align:center;padding:40px 0 40px 0;display:none">검색결과가 존재하지 않습니다.</li>
+
+                    style = str(tag2.get('style'))
+                    #print('style = ' + style)
+                    if style == 'None':
+
+                        tags3 = tag2.select( "div.box-contents > a" )
+                        for tag3 in tags3:
+                            href = tag3['href']
+                            hrefs = href.split( '=' )
+
+                            moviecode = hrefs[1]
+                            moviename = tag3.text.strip()
+                            # print( '{} {}'.format(moviecode, moviename) )
 
 
-                    tags3 = tag2.select( "span.txt-info" )
-                    for tag3 in tags3:
-                        # for lin in tag3.text.splitlines():
-                        #     print( ' +{}+ '.format(lin.strip()) )
-                        releasedate = tag3.text.splitlines()[2].strip()
-                        if releasedate != '개봉예정':
-                            releasedate = releasedate[0:4] + releasedate[5:7] + releasedate[8:10]
-                        else:
-                            releasedate = ''
+                        tags3 = tag2.select( "span.txt-info" )
+                        for tag3 in tags3:
+                            # for lin in tag3.text.splitlines():
+                            #     print( ' +{}+ '.format(lin.strip()) )
+                            releasedate = tag3.text.splitlines()[2].strip()
+                            if releasedate != '개봉예정':
+                                releasedate = releasedate[0:4] + releasedate[5:7] + releasedate[8:10]
+                            else:
+                                releasedate = ''
 
-                            #print( ' +{}+ '.format( releasedate ) )
+                                #print( ' +{}+ '.format( releasedate ) )
 
-                    if isPrnConsole:
-                        mov_count += 1
+                        if isPrnConsole:
+                            mov_count += 1
 
-                    dicMovies[moviecode] = [moviename, releasedate]  # 영화데이터 정보
+                        dicMovies[moviecode] = [moviename, releasedate]  # 영화데이터 정보
 
-                    if isPrnConsole:
-                        print( '{} : {},{},{}'.format( mov_count, moviecode, moviename, releasedate ) )
+                        if isPrnConsole:
+                            print( '{} : {},{},{}'.format( mov_count, moviecode, moviename, releasedate ) )
+        i = i + 1
 #
 # 영화/무비파인더(http://www.cgv.co.kr/movies/finder.aspx) 에서 영화데이터를 가지고 온다. (dicMovies)
 #
@@ -324,19 +367,20 @@ def crawl_cgv_showtimes(isPrnConsole):
     # 3일간 자료 가져오기
     for today in days:
 
-        if  today!='{:04d}{:02d}{:02d}'.format( date1.year, date1.month, date1.day ):  # 일단 오늘 자료만 가지고 온다.
-            continue
+        #--#
+        #if  today!='{:04d}{:02d}{:02d}'.format( date1.year, date1.month, date1.day ):  # 일단 오늘 자료만 가지고 온다.
+        #    continue
 
         # 극장을 하나씩 순회한다.
         for theaterkey in dicTheaters.keys():
 
             #--#
-            if  theaterkey != '0121': # 일단 특정극장만
-                 continue
+            #if  theaterkey != '0121': # 일단 특정극장(cgv제주)만
+            #     continue
 
             if isPrnConsole:
                 print( '-------------------------------------' )
-                print( '{}일 : {},{}'.format( today, dicTheaters[theaterkey][1], dicTheaters[theaterkey][2] ) )
+                print( '{} 일 : {},{}'.format( today, dicTheaters[theaterkey][1], dicTheaters[theaterkey][2] ) )
                 print( '-------------------------------------' )
 
             url = 'http://www.cgv.co.kr/common/showtimes/iframeTheater.aspx?areacode='+dicTheaters[theaterkey][0]+'&theatercode='+theaterkey+'&date='+days[0]+''
@@ -502,21 +546,24 @@ def crawl_cgv_upload():
 #
 
 
+
 #########################################################################################################################################
 #########################################################################################################################################
 #########################################################################################################################################
 #########################################################################################################################################
+
 if  __name__ == '__main__':
 
     ####crawl_cgv_moviechart() # 영화/무비차트(http://www.cgv.co.kr/movies/?ft=0) 애서 영화정보를 가지고온다. (dicMovies)
 
-    ##crawl_cgv_moviefinder(True) # 영화/무비파인더(http://www.cgv.co.kr/movies/finder.aspx) 에서 영화데이터를 가지고 온다. (dicMovies)
+    crawl_cgv_moviefinder(True) # 영화/무비파인더(http://www.cgv.co.kr/movies/finder.aspx) 에서 영화데이터를 가지고 온다. (dicMovies) - 화면 서비스가 정지 될 수 있어서.. 그 경우 위의 함수를 호출한다.
 
-    crawl_cgv_theaters(False) # 예매/상영시간표(http://www.cgv.co.kr/reserve/show-times/) 극장정보를 가지고 온다. (dicTheaters)
+    crawl_cgv_theaters(True) # 예매/상영시간표(http://www.cgv.co.kr/reserve/show-times/) 극장정보를 가지고 온다. (dicTheaters)
 
     crawl_cgv_showtimes(True) # 예매/상영시간표(http://www.cgv.co.kr/reserve/show-times/)의 프래임에서 상영정보를 가지고 온다. (dicTicketMovies)
 
     crawl_cgv_upload()
+
 #########################################################################################################################################
 #########################################################################################################################################
 #########################################################################################################################################
