@@ -206,14 +206,15 @@ def crawl_mega_schedule(isPrnConsole):
         print( '일자, 지역명, 극장명' )
         print( '-------------------------------------' )
 
-    for count in range( 0, 1):  # 3일간
+    for count in range( 0, 3):  # 3일간
 
         dicPlaydate = {}
 
         for dicCinema in dicCinemas: # 극장들을 순환
             #print( dicRegions[dicCinemas[dicCinema][0]]+','+ dicCinemas[dicCinema][1] )
 
-            if dicCinema != '6902':  continue # 제주아라....
+            #--#
+            #if dicCinema != '6902':  continue # 제주아라....
 
             dicSchMovies = {}    # 스케쥴 > 극장 / 영화 정보
             dicSchRooms = {}     # 스케쥴 > 관 정보
@@ -407,9 +408,9 @@ def crawl_mega_upload():
 
 if  __name__ == '__main__':
 
-    crawl_mega_movie(False) # 영화(http://www.megabox.co.kr/?menuId=movie) 에서 영화데이터를 가지고 온다. (dicMovies)
+    crawl_mega_movie(True) # 영화(http://www.megabox.co.kr/?menuId=movie) 에서 영화데이터를 가지고 온다. (dicMovies)
 
-    crawl_mega_cinema(False) # 영화관(http://www.megabox.co.kr/?menuId=theater)에서 지역데이터,영화관데이터를 가지고 온다. (dicRegions,dicCinemas)
+    crawl_mega_cinema(True) # 영화관(http://www.megabox.co.kr/?menuId=theater)에서 지역데이터,영화관데이터를 가지고 온다. (dicRegions,dicCinemas)
 
     crawl_mega_schedule(True) # 영화관(http://www.megabox.co.kr/?menuId=theater)에서 영화관에 스케줄데이터를 가지고 온다. (dicRegions,dicCinemas)
 
