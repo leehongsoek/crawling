@@ -264,7 +264,7 @@ def crawl_cgv_moviefinder(isPrnConsole):
 
                         if isPrnConsole: #################
                             print( '{} : {},{},{}'.format( mov_count, moviecode, moviename, releasedate ) )
-        i = i + 1
+        i += 1
 #
 # 영화/무비파인더(http://www.cgv.co.kr/movies/finder.aspx) 에서 영화데이터를 가지고 온다. (dicMovies)
 #
@@ -320,7 +320,7 @@ def crawl_cgv_theaters(isPrnConsole):
                 i = 0
                 for regioncode in regioncodes:
                     dicRegions[regioncode] = regionnames[i];   # 지역코드 정보 추가 (지역코드+지역명)
-                    i = i + 1
+                    i += 1
 
 
                 for theater in json_theater['AreaTheaterDetailList']:
@@ -437,7 +437,7 @@ def crawl_cgv_showtimes(isPrnConsole):
                 tags2 = tag1.select( "div.info-movie > i" )
                 j = 0
                 for tag2 in tags2:
-                    j = j + 1
+                    j += 1
                     if j == 1 : moviegenre = tag2.text.strip().replace( '\xa0', ' ' ).replace( "\r\n", "" )
                     if j == 2 : movieruntime = tag2.text.strip().replace( '\xa0', ' ' ).replace( "\r\n", "" )
                     if j == 3 :
@@ -455,7 +455,7 @@ def crawl_cgv_showtimes(isPrnConsole):
 
                     k = 0
                     for tag3 in tags3:
-                        k = k + 1
+                        k += 1
                         if k == 1:
                             filmtype   = tag3.text.strip().replace("\r\n", "")
                         if k == 2:
@@ -470,7 +470,7 @@ def crawl_cgv_showtimes(isPrnConsole):
                     k = 0
                     tags3 = tag2.select( "div.info-timetable > ul > li" )
                     for tag3 in tags3:
-                        k = k + 1
+                        k += 1
                         tags4 = tag3.select( "a" )
 
                         playtime = ''
