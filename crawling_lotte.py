@@ -253,8 +253,8 @@ def crawl_lotte_ticketingdata(isPrnConsole):
     date3 = date2 + datetime.timedelta( days=1 )
 
     days.append( '{:04d}-{:02d}-{:02d}'.format( date1.year, date1.month, date1.day ) )  ## 오늘의 날짜
-    #days.append( '{:04d}-{:02d}-{:02d}'.format( date2.year, date2.month, date2.day ) )  ## 오늘+1의 날짜
-    #days.append( '{:04d}-{:02d}-{:02d}'.format( date3.year, date3.month, date3.day ) )  ## 오늘+2의 날짜
+    days.append( '{:04d}-{:02d}-{:02d}'.format( date2.year, date2.month, date2.day ) )  ## 오늘+1의 날짜
+    days.append( '{:04d}-{:02d}-{:02d}'.format( date3.year, date3.month, date3.day ) )  ## 오늘+2의 날짜
 
     # 3일간 자료 가져오기
     for today in days:
