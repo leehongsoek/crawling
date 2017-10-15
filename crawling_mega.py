@@ -1,6 +1,6 @@
 '''
 
-megabox
+MAGA BOX
 
 http://www.megabox.co.kr/
 
