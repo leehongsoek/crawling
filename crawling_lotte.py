@@ -1,5 +1,8 @@
 '''
-롯데 시네마에서 자료가져오기
+롯데 시네마
+
+http://www.lottecinema.co.kr/
+
 '''
 
 import random
@@ -390,9 +393,9 @@ def func_lotte_upload():
 
 if  __name__ == '__main__':
 
-    crawl_lotte_boxoffice(False) # 영화 / 박스 오피스(http://www.lottecinema.co.kr/LCHS/Contents/Movie/Movie-List.aspx) 에서 영화데이터를 가지고 온다. (dicMovieData)
+    crawl_lotte_boxoffice(True) # 영화 / 박스 오피스(http://www.lottecinema.co.kr/LCHS/Contents/Movie/Movie-List.aspx) 에서 영화데이터를 가지고 온다. (dicMovieData)
 
-    crawl_lotte_cinema(False) # 영화관 (http://www.lottecinema.co.kr/LCHS/Contents/Cinema) 에서 극장데이터를 가지고 온다. (dicCinemas)
+    crawl_lotte_cinema(True) # 영화관 (http://www.lottecinema.co.kr/LCHS/Contents/Cinema) 에서 극장데이터를 가지고 온다. (dicCinemas)
     # for dicCinema in dicCinemas:
     #     print( dicCinema + ' // ' + str( dicCinemas[dicCinema] ) )
 
