@@ -135,7 +135,7 @@ def crawl_cgv_moviefinder(isPrnConsole):
     date1 = datetime.date.today()                    ## 오늘자 날짜객체
     date2 = date1 + datetime.timedelta( days=-365 )  ## 1년전
 
-    #####year_from = date2.year ## 1년전 개봉작부터...
+    ####year_from = date2.year ## 1년전 개봉작부터...
     year_from = 1960
 
     if isPrnConsole: #################
@@ -523,7 +523,7 @@ def crawl_cgv_showtimes(isPrnConsole):
                     if isPrnConsole:  #################
                         print( dicTicketRooms )
 
-                dicTicketMovies[moviecode] = [today, moviename, moviegrade, movieplaying, moviegenre, movieruntime, moviereleasedate, dicTicketRooms]
+                dicTicketMovies[moviecode] = [moviename, moviegrade, movieplaying, moviegenre, movieruntime, moviereleasedate, dicTicketRooms]
 
                 if isPrnConsole: #################
                     print(dicTicketMovies)
@@ -573,9 +573,9 @@ if  __name__ == '__main__':
 
     ####crawl_cgv_moviechart() # 영화/무비차트(http://www.cgv.co.kr/movies/?ft=0) 애서 영화정보를 가지고온다. (dicMovies)
 
-    crawl_cgv_moviefinder(False) # 영화/무비파인더(http://www.cgv.co.kr/movies/finder.aspx) 에서 영화데이터를 가지고 온다. (dicMovies) - 화면 서비스가 정지 될 수 있어서.. 그 경우 위의 함수를 호출한다.
+    crawl_cgv_moviefinder(True) # 영화/무비파인더(http://www.cgv.co.kr/movies/finder.aspx) 에서 영화데이터를 가지고 온다. (dicMovies) - 화면 서비스가 정지 될 수 있어서.. 그 경우 위의 함수를 호출한다.
 
-    crawl_cgv_theaters(False) # 예매/상영시간표(http://www.cgv.co.kr/reserve/show-times/) 극장정보를 가지고 온다. (dicTheaters)
+    crawl_cgv_theaters(True) # 예매/상영시간표(http://www.cgv.co.kr/reserve/show-times/) 극장정보를 가지고 온다. (dicTheaters)
 
     crawl_cgv_showtimes(True) # 예매/상영시간표(http://www.cgv.co.kr/reserve/show-times/)의 프래임에서 상영정보를 가지고 온다. (dicTicketMovies)
 
