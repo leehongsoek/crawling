@@ -14,6 +14,7 @@ import crawling_lotte as lotte
 if  __name__ == '__main__':
 
     # CGV
+
     cgv.crawl_cgv_moviefinder( True )  # 영화/무비파인더(http://www.cgv.co.kr/movies/finder.aspx) 에서 영화데이터를 가지고 온다. (dicMovies) - 화면 서비스가 정지 될 수 있어서.. 그 경우 위의 함수를 호출한다.
 
     cgv.crawl_cgv_theaters( True )  # 예매/상영시간표(http://www.cgv.co.kr/reserve/show-times/) 극장정보를 가지고 온다. (dicTheaters)
