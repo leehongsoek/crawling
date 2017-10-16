@@ -21,7 +21,7 @@ import json
 dicMovies = {}   # 영화 코드 정보
 dicRegions = {}  # 지역코드 정보
 dicTheaters = {} # 극장코드 정보
-dicTicketingData = {}  # 티켓팅 정보
+dicTicketingDays = {}  # 티켓팅 3일치 정보
 
 http = urllib3.PoolManager()
 
@@ -378,6 +378,8 @@ def crawl_cgv_showtimes(isPrnConsole):
         #if  today!='{:04d}{:02d}{:02d}'.format( date1.year, date1.month, date1.day ):  # 일단 오늘 자료만 가지고 온다.
         #    continue
 
+        dicTicketingData = {}  # 티켓팅 정보
+
         # 극장을 하나씩 순회한다.
         for theaterkey in dicTheaters.keys():
 
@@ -400,6 +402,7 @@ def crawl_cgv_showtimes(isPrnConsole):
             dicTicketMovies = {} #
 
             soup = BeautifulSoup( data, 'html.parser' )
+
 
             tags1 = soup.select( "div.sect-showtimes > ul > li > div.col-times" )
             for tag1 in tags1:
@@ -520,13 +523,20 @@ def crawl_cgv_showtimes(isPrnConsole):
                     if isPrnConsole:  #################
                         print( dicTicketRooms )
 
-
                 dicTicketMovies[moviecode] = [today, moviename, moviegrade, movieplaying, moviegenre, movieruntime, moviereleasedate, dicTicketRooms]
 
                 if isPrnConsole: #################
                     print(dicTicketMovies)
 
             dicTicketingData[theaterkey] = dicTicketMovies
+
+            dicTicketMovies = {}
+
+        dicTicketingDays[today] = dicTicketingData
+
+        dicTicketingData = {}
+
+        print(dicTicketingDays)
 #
 # 예매/상영시간표(http://www.cgv.co.kr/reserve/show-times/)의 프래임에서 상영정보를 가지고 온다. (dicTicketMovies)
 #
@@ -540,7 +550,7 @@ def crawl_cgv_upload():
     fields = { "movies": str( dicMovies )
              , "regions": str( dicRegions )
              , "theater": str( dicTheaters )
-             , "ticketingdata": str( dicTicketingData )
+             , "ticketingdays": str( dicTicketingDays )
              }
     url = 'http://www.mtns7.co.kr/totalscore/cgv_upload.php'
 
@@ -563,9 +573,9 @@ if  __name__ == '__main__':
 
     ####crawl_cgv_moviechart() # 영화/무비차트(http://www.cgv.co.kr/movies/?ft=0) 애서 영화정보를 가지고온다. (dicMovies)
 
-    crawl_cgv_moviefinder(True) # 영화/무비파인더(http://www.cgv.co.kr/movies/finder.aspx) 에서 영화데이터를 가지고 온다. (dicMovies) - 화면 서비스가 정지 될 수 있어서.. 그 경우 위의 함수를 호출한다.
+    crawl_cgv_moviefinder(False) # 영화/무비파인더(http://www.cgv.co.kr/movies/finder.aspx) 에서 영화데이터를 가지고 온다. (dicMovies) - 화면 서비스가 정지 될 수 있어서.. 그 경우 위의 함수를 호출한다.
 
-    crawl_cgv_theaters(True) # 예매/상영시간표(http://www.cgv.co.kr/reserve/show-times/) 극장정보를 가지고 온다. (dicTheaters)
+    crawl_cgv_theaters(False) # 예매/상영시간표(http://www.cgv.co.kr/reserve/show-times/) 극장정보를 가지고 온다. (dicTheaters)
 
     crawl_cgv_showtimes(True) # 예매/상영시간표(http://www.cgv.co.kr/reserve/show-times/)의 프래임에서 상영정보를 가지고 온다. (dicTicketMovies)
 
