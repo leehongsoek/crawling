@@ -386,7 +386,7 @@ def crawl_mega_upload():
              , "cinemas": str( dicCinemas )
              , "ticketingdata": str( dicTicketingData )
              }
-    url = 'http://www.mtns7.co.kr/totalscore/mega_upload.php'
+    url = 'http://www.mtns7.co.kr/totalscore/upload_mega.php'
 
     r = requests.post( url, fields )
 

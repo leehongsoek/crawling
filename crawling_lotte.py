@@ -374,7 +374,7 @@ def func_lotte_upload():
              , "cinemas": str( dicCinemas )
              , "ticketingdata": str( dicTicketingData )
              }
-    url = 'http://www.mtns7.co.kr/totalscore/lotte_upload.php'
+    url = 'http://www.mtns7.co.kr/totalscore/upload_lotte.php'
 
     r = http.request( 'POST', url, fields )
 

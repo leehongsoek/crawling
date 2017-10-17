@@ -552,7 +552,7 @@ def crawl_cgv_upload():
              , "theater": str( dicTheaters )
              , "ticketingdays": str( dicTicketingDays )
              }
-    url = 'http://www.mtns7.co.kr/totalscore/cgv_upload.php'
+    url = 'http://www.mtns7.co.kr/totalscore/upload_cgv.php'
 
     r = http.request( 'POST', url, fields )
 
