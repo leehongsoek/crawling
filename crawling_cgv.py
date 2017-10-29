@@ -547,6 +547,8 @@ def crawl_cgv_showtimes(isPrnConsole):
 #
 def crawl_cgv_upload():
 
+    print( '### 서버 전송 시작 ###' )
+
     fields = { "movies": str( dicMovies )
              , "regions": str( dicRegions )
              , "theater": str( dicTheaters )
@@ -557,7 +559,10 @@ def crawl_cgv_upload():
     r = http.request( 'POST', url, fields )
 
     data = r.data.decode( 'utf-8' )
-    print( data )
+
+    print( '[', r.text, ']' )
+
+    print( '### 서버 전송 종료 ###' )
 #
 # CGV 클로링 정보 올리기..
 #

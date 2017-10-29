@@ -390,6 +390,8 @@ def crawl_lotte_ticketingdata(isPrnConsole):
 #
 def func_lotte_upload():
 
+    print( '### 서버 전송 시작 ###' )
+
     fields = { "moviedata": str( dicMovieData )
              , "cinemas": str( dicCinemas )
              , "ticketingdata": str( dicTicketingData )
@@ -399,7 +401,10 @@ def func_lotte_upload():
     r = http.request( 'POST', url, fields )
 
     data = r.data.decode( 'utf-8' )
-    print( data )
+
+    print( '[', r.text, ']' )
+
+    print( '### 서버 전송 종료 ###' )
 #
 # LOTTE 클로링 정보 올리기..
 #

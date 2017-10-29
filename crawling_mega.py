@@ -381,6 +381,8 @@ def crawl_mega_schedule(isPrnConsole):
 #
 def crawl_mega_upload():
 
+    print( '### 서버 전송 시작 ###' )
+
     fields = { "movies": str( dicMovies )
              , "regions": str( dicRegions )
              , "cinemas": str( dicCinemas )
@@ -390,7 +392,11 @@ def crawl_mega_upload():
 
     r = requests.post( url, fields )
 
+    data = r.data.decode( 'utf-8' )
+
     print( '[',r.text,']' )
+
+    print( '### 서버 전송 종료 ###' )
 #
 # MAGA 클로링 정보 올리기..
 #
