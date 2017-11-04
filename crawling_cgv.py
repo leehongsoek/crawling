@@ -393,7 +393,7 @@ def crawl_cgv_showtimes(isPrnConsole):
                 print( '-------------------------------------' )
 
             url = 'http://www.cgv.co.kr/common/showtimes/iframeTheater.aspx?areacode='+dicTheaters[theaterkey][0]+'&theatercode='+theaterkey+'&date='+today+''
-            print(url)
+            # print(url)
             r = http.request( 'GET', url )
 
             data = r.data.decode( 'utf-8' )
