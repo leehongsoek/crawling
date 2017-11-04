@@ -384,16 +384,16 @@ def crawl_cgv_showtimes(isPrnConsole):
         for theaterkey in dicTheaters.keys():
 
             #--#
-            #if  theaterkey != '0121': # 일단 특정극장(cgv제주)만
-            #     continue
+            # if  theaterkey != '0121': # 일단 특정극장(cgv제주)만
+            #      continue
 
             if isPrnConsole: #################
                 print( '-------------------------------------' )
                 print( '{} 일 : {},{}'.format( today, dicTheaters[theaterkey][1], dicTheaters[theaterkey][2] ) )
                 print( '-------------------------------------' )
 
-            url = 'http://www.cgv.co.kr/common/showtimes/iframeTheater.aspx?areacode='+dicTheaters[theaterkey][0]+'&theatercode='+theaterkey+'&date='+days[0]+''
-            #print(url)
+            url = 'http://www.cgv.co.kr/common/showtimes/iframeTheater.aspx?areacode='+dicTheaters[theaterkey][0]+'&theatercode='+theaterkey+'&date='+today+''
+            print(url)
             r = http.request( 'GET', url )
 
             data = r.data.decode( 'utf-8' )
@@ -517,26 +517,29 @@ def crawl_cgv_showtimes(isPrnConsole):
                                 # print( tag4.text )
 
                         dicTicketTiomes[k] = [playtime, playinfo, playetc]
+                    #
+
+                    # if isPrnConsole:  #################
+                    #     print( dicTicketTiomes )
 
                     dicTicketRooms[j] = [filmtype, roomfloor, totalseat, dicTicketTiomes]
+                #
 
-                    if isPrnConsole:  #################
-                        print( dicTicketRooms )
+                if isPrnConsole:  #################
+                     print( dicTicketRooms )
 
                 dicTicketMovies[moviecode] = [moviename, moviegrade, movieplaying, moviegenre, movieruntime, moviereleasedate, dicTicketRooms]
 
-                if isPrnConsole: #################
-                    print(dicTicketMovies)
+            #
+
+            # if isPrnConsole:  #################
+            #     print( dicTicketMovies )
 
             dicTicketingData[theaterkey] = dicTicketMovies
-
-            dicTicketMovies = {}
+        #
 
         dicTicketingDays[today] = dicTicketingData
-
-        dicTicketingData = {}
-
-        print(dicTicketingDays)
+    #
 #
 # 예매/상영시간표(http://www.cgv.co.kr/reserve/show-times/)의 프래임에서 상영정보를 가지고 온다. (dicTicketMovies)
 #
@@ -560,7 +563,7 @@ def crawl_cgv_upload():
 
     data = r.data.decode( 'utf-8' )
 
-    print( '[', r.text, ']' )
+    print( '[', data, ']' )
 
     print( '### 서버 전송 종료 ###' )
 #

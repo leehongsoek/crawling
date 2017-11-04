@@ -402,7 +402,7 @@ def func_lotte_upload():
 
     data = r.data.decode( 'utf-8' )
 
-    print( '[', r.text, ']' )
+    print( '[', data, ']' )
 
     print( '### 서버 전송 종료 ###' )
 #
