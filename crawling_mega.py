@@ -204,7 +204,7 @@ def crawl_mega_schedule(isPrnConsole):
         print( '일자, 지역명, 극장명' )
         print( '-------------------------------------' )
 
-    for count in range( 0, 3):  # 3일간
+    for count in range( 0, 4):  # 4일간
 
         dicPlaydate = {}
 
