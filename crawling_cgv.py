@@ -365,13 +365,21 @@ def crawl_cgv_showtimes(isPrnConsole):
     date1 = datetime.date.today()                 ## 오늘자 날짜객체
     date2 = date1 + datetime.timedelta( days=1 )  ## +1 일
     date3 = date2 + datetime.timedelta( days=1 )  ## +2 일
+    date4 = date3 + datetime.timedelta( days=1 )  ## +3 일
+    #date5 = date4 + datetime.timedelta( days=1 )  ## +4 일
+    #date6 = date5 + datetime.timedelta( days=1 )  ## +5 일
+    #date7 = date6 + datetime.timedelta( days=1 )  ## +6 일
 
     days.append( '{:04d}{:02d}{:02d}'.format( date1.year, date1.month, date1.day ) )  ## 오늘의 날짜
     days.append( '{:04d}{:02d}{:02d}'.format( date2.year, date2.month, date2.day ) )  ## 오늘+1의 날짜
     days.append( '{:04d}{:02d}{:02d}'.format( date3.year, date3.month, date3.day ) )  ## 오늘+2의 날짜
+    days.append( '{:04d}{:02d}{:02d}'.format( date4.year, date4.month, date4.day ) )  ## 오늘+3의 날짜
+    #days.append( '{:04d}{:02d}{:02d}'.format( date5.year, date3.month, date5.day ) )  ## 오늘+4의 날짜
+    #days.append( '{:04d}{:02d}{:02d}'.format( date6.year, date6.month, date6.day ) )  ## 오늘+5의 날짜
+    #days.append( '{:04d}{:02d}{:02d}'.format( date7.year, date7.month, date7.day ) )  ## 오늘+6의 날짜
 
 
-    # 3일간 자료 가져오기
+    # 7일간 자료 가져오기
     for today in days:
 
         #--#
