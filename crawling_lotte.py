@@ -61,6 +61,7 @@ def crawl_lotte_boxoffice(isPrnConsole):
                       }
     url = 'http://www.lottecinema.co.kr/LCWS/Movie/MovieData.aspx?nocashe=' + str( random.random() )
     r = http.request( 'POST', url, fields )
+    time.sleep( 2 )
 
     data = r.data.decode( 'utf-8' )
     # print(data)
@@ -101,6 +102,7 @@ def crawl_lotte_boxoffice(isPrnConsole):
                       }
     url = 'http://www.lottecinema.co.kr/LCWS/Movie/MovieData.aspx?nocashe=' + str( random.random() )
     r = http.request( 'POST', url, fields )
+    time.sleep( 2 )
 
     data = r.data.decode( 'utf-8' )
     # print(data)
@@ -167,6 +169,7 @@ def crawl_lotte_cinema(isPrnConsole):
                   }
         url = 'http://www.lottecinema.co.kr/LCWS/Cinema/CinemaData.aspx?nocashe=' + str( random.random() )
         r = http.request( 'POST', url, fields )
+        time.sleep( 2 )
 
         data = r.data.decode( 'utf-8' )
         # print(data)
@@ -211,6 +214,7 @@ def crawl_lotte_cinema(isPrnConsole):
                   }
         url = 'http://www.lottecinema.co.kr/LCWS/Cinema/CinemaData.aspx?nocashe=' + str( random.random() )
         r = http.request( 'POST', url, fields )
+        time.sleep( 2 )
 
         data = r.data.decode( 'utf-8' )
 
@@ -270,7 +274,7 @@ def crawl_lotte_ticketingdata(isPrnConsole):
 
         for dicCinema in dicCinemas:
             # print(dicCinema +'//' +str(dicCinemas[dicCinema]))
-            #if dicCinema != '9013': # 서귀포
+            #if dicCinema != '9013': # 서귀포   #  CinemaID=1013 #  가산디지컬
             #     continue
 
             fields = {"paramList":
@@ -286,6 +290,7 @@ def crawl_lotte_ticketingdata(isPrnConsole):
             url = 'http://www.lottecinema.co.kr/LCWS/Ticketing/TicketingData.aspx?nocashe=' + str( random.random() )
 
             r = http.request( 'POST', url, fields )
+            time.sleep( 2 )
             # status = r.status
             data = r.data.decode( 'utf-8' )
             # print( data )
