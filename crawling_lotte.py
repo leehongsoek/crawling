@@ -16,6 +16,8 @@ from multiprocessing import Queue # python Setup.py build # exe 파일 생성을
 #########################################################################################################################################
 # 공통 변수......
 #
+delayTime = 10
+
 dicMovieData = {}  # 영화데이터 정보
 dicCinemas = {}  # 극장 코드 정보
 dicMovies = {}  # 영화 코드 정보
@@ -61,7 +63,7 @@ def crawl_lotte_boxoffice(isPrnConsole):
                       }
     url = 'http://www.lottecinema.co.kr/LCWS/Movie/MovieData.aspx?nocashe=' + str( random.random() )
     r = http.request( 'POST', url, fields )
-    time.sleep( 2 )
+    time.sleep( delayTime )
 
     data = r.data.decode( 'utf-8' )
     # print(data)
@@ -102,7 +104,7 @@ def crawl_lotte_boxoffice(isPrnConsole):
                       }
     url = 'http://www.lottecinema.co.kr/LCWS/Movie/MovieData.aspx?nocashe=' + str( random.random() )
     r = http.request( 'POST', url, fields )
-    time.sleep( 2 )
+    time.sleep( delayTime )
 
     data = r.data.decode( 'utf-8' )
     # print(data)
@@ -169,7 +171,7 @@ def crawl_lotte_cinema(isPrnConsole):
                   }
         url = 'http://www.lottecinema.co.kr/LCWS/Cinema/CinemaData.aspx?nocashe=' + str( random.random() )
         r = http.request( 'POST', url, fields )
-        time.sleep( 2 )
+        time.sleep( delayTime )
 
         data = r.data.decode( 'utf-8' )
         # print(data)
@@ -214,7 +216,7 @@ def crawl_lotte_cinema(isPrnConsole):
                   }
         url = 'http://www.lottecinema.co.kr/LCWS/Cinema/CinemaData.aspx?nocashe=' + str( random.random() )
         r = http.request( 'POST', url, fields )
-        time.sleep( 2 )
+        time.sleep( delayTime )
 
         data = r.data.decode( 'utf-8' )
 
@@ -290,7 +292,7 @@ def crawl_lotte_ticketingdata(isPrnConsole):
             url = 'http://www.lottecinema.co.kr/LCWS/Ticketing/TicketingData.aspx?nocashe=' + str( random.random() )
 
             r = http.request( 'POST', url, fields )
-            time.sleep( 2 )
+            time.sleep( delayTime )
             # status = r.status
             data = r.data.decode( 'utf-8' )
             # print( data )
