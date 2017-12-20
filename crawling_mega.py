@@ -12,6 +12,7 @@ from urllib.request import urlopen
 from bs4 import BeautifulSoup
 import requests # http://docs.python-requests.org/en/master/user/quickstart/ pip install requests
 from multiprocessing import Queue # python Setup.py build # exe 파일 생성을 위해 꼭 필요
+import urllib3  # pip install urllib3
 
 #########################################################################################################################################
 # 공통 변수......
@@ -21,6 +22,8 @@ dicRegions = {}  # 지역코드 정보
 dicCinemas = {}  # 극장코드 정보
 
 dicTicketingData = {}  # 티켓팅 정보
+
+http = urllib3.PoolManager()
 
 #
 #
@@ -204,7 +207,8 @@ def crawl_mega_schedule(isPrnConsole):
         print( '일자, 지역명, 극장명' )
         print( '-------------------------------------' )
 
-    for count in range( 0, 4):  # 4일간
+    #for count in range( 0, 4):  # 4일간
+    for count in range( 1, 4 ):  # 4일간
 
         dicPlaydate = {}
 
@@ -390,11 +394,11 @@ def crawl_mega_upload():
              }
     url = 'http://www.mtns7.co.kr/totalscore/upload_mega.php'
 
-    r = requests.post( url, fields )
+    r = http.request( 'POST', url, fields )
 
     data = r.data.decode( 'utf-8' )
 
-    print( '[',data,']' )
+    print( '[', data, ']' )
 
     print( '### 서버 전송 종료 ###' )
 #

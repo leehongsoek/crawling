@@ -11,18 +11,19 @@ import urllib3  # pip install urllib3
 import json
 from jsonpath_rw import jsonpath, parse  # pip install jsonpath-rw      https://pypi.python.org/pypi/jsonpath-rw
 from multiprocessing import Queue # python Setup.py build # exe 파일 생성을 위해 꼭 필요
+import urllib3  # pip install urllib3
 
 
 #########################################################################################################################################
 # 공통 변수......
 #
-delayTime = 10
+delayTime = 1
 
 dicMovieData = {}  # 영화데이터 정보
 dicCinemas = {}  # 극장 코드 정보
 dicMovies = {}  # 영화 코드 정보
-dicTicketingData = {}  # 티켓팅 정보
 
+dicTicketingData = {}  # 티켓팅 정보
 
 http = urllib3.PoolManager()
 
@@ -261,9 +262,9 @@ def crawl_lotte_ticketingdata(isPrnConsole):
     date4 = date3 + datetime.timedelta( days=1 )
 
     days.append( '{:04d}-{:02d}-{:02d}'.format( date1.year, date1.month, date1.day ) )  ## 오늘의 날짜
-    days.append( '{:04d}-{:02d}-{:02d}'.format( date2.year, date2.month, date2.day ) )  ## 오늘+1의 날짜
-    days.append( '{:04d}-{:02d}-{:02d}'.format( date3.year, date3.month, date3.day ) )  ## 오늘+2의 날짜
-    days.append( '{:04d}-{:02d}-{:02d}'.format( date4.year, date4.month, date4.day ) )  ## 오늘+3의 날짜
+    #days.append( '{:04d}-{:02d}-{:02d}'.format( date2.year, date2.month, date2.day ) )  ## 오늘+1의 날짜
+    #days.append( '{:04d}-{:02d}-{:02d}'.format( date3.year, date3.month, date3.day ) )  ## 오늘+2의 날짜
+    #days.append( '{:04d}-{:02d}-{:02d}'.format( date4.year, date4.month, date4.day ) )  ## 오늘+3의 날짜
 
     # 4일간 자료 가져오기
 
@@ -276,8 +277,11 @@ def crawl_lotte_ticketingdata(isPrnConsole):
 
         for dicCinema in dicCinemas:
             # print(dicCinema +'//' +str(dicCinemas[dicCinema]))
-            #if dicCinema != '9013': # 서귀포   #  CinemaID=1013 #  가산디지컬
+            #if dicCinema != '9013': # 서귀포
+            #  CinemaID=1013 #  가산디지컬
             #     continue
+            #if dicCinema != '1013': #  가산디지컬
+            #    continue
 
             fields = {"paramList":
                           '{"MethodName":"GetPlaySequence",'
@@ -346,6 +350,7 @@ def crawl_lotte_ticketingdata(isPrnConsole):
                 dicScreen[screenid] = [screennamekr, totalseatcount]
 
             screenid_old = None
+            screenNo = 0
             degreeNo = 0
             for match2 in jsonpath_expr2.find( json_obj ):
                 cinemanamekr          = match2.value['CinemaNameKR']            # 극장명
@@ -367,21 +372,22 @@ def crawl_lotte_ticketingdata(isPrnConsole):
                         dicScreen[screenid_old].append(dicTime)
                     #
 
+                    screenNo += 1
                     degreeNo = 0
                     dicTime = {}
                     screenid_old = screenid
                 #
 
                 degreeNo += 1
-                dicTime[degreeNo] = [starttime, endtime, bookingseatcount, moviecode, dicMovies[moviecode][1], dicMovies[moviecode][2]]
+                dicTime[(screenNo*100) + degreeNo] = [starttime, endtime, bookingseatcount, moviecode, dicMovies[moviecode][1], dicMovies[moviecode][2]]
                 #dicTime[degreeNo] = [starttime, endtime, bookingseatcount, moviecode, dicMovies[moviecode][0], dicMovies[moviecode][1], dicMovies[moviecode][2]]
 
                 if isPrnConsole:  #################
                     ticket_count += 1
-                    print( '{} : {},{},{},{},{},{},{},{},{},{},{},{}'.format( today, dicCinema, cinemanamekr, sequencenogroupnamekr, screennamekr, dicMovies[moviecode][0], dicMovies[moviecode][1], dicMovies[moviecode][2], playdt, starttime, endtime, bookingseatcount, totalseatcount ) )
+                    print( '{} : {},{},{},{},{},{},{},{},{},{}~{},{},{}'.format( today, dicCinema, cinemanamekr, sequencenogroupnamekr, screennamekr, moviecode, dicMovies[moviecode][0], dicMovies[moviecode][1], dicMovies[moviecode][2], playdt, starttime, endtime, bookingseatcount, totalseatcount ) )
 
             if screenid_old is not None:
-                dicScreen[screenid_old].append( dicTime )
+                dicScreen[screenid].append( dicTime )
 
             dicTeather[dicCinema] = [dicScreen]
         #
@@ -434,6 +440,12 @@ if  __name__ == '__main__':
     crawl_lotte_ticketingdata(True) # 영화관 (http://www.lottecinema.co.kr/LCWS/Ticketing/TicketingData.aspx) 에서 극장데이터를 가지고 온다. (dicTicketingData1)
 
     func_lotte_upload()
+
+
+
+
+
+
 
 #########################################################################################################################################
 #########################################################################################################################################

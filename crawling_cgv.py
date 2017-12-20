@@ -21,6 +21,7 @@ import json
 dicMovies = {}   # 영화 코드 정보
 dicRegions = {}  # 지역코드 정보
 dicTheaters = {} # 극장코드 정보
+
 dicTicketingDays = {}  # 티켓팅 3일치 정보
 
 http = urllib3.PoolManager()
@@ -370,7 +371,7 @@ def crawl_cgv_showtimes(isPrnConsole):
     #date6 = date5 + datetime.timedelta( days=1 )  ## +5 일
     #date7 = date6 + datetime.timedelta( days=1 )  ## +6 일
 
-    days.append( '{:04d}{:02d}{:02d}'.format( date1.year, date1.month, date1.day ) )  ## 오늘의 날짜
+    #days.append( '{:04d}{:02d}{:02d}'.format( date1.year, date1.month, date1.day ) )  ## 오늘의 날짜
     days.append( '{:04d}{:02d}{:02d}'.format( date2.year, date2.month, date2.day ) )  ## 오늘+1의 날짜
     days.append( '{:04d}{:02d}{:02d}'.format( date3.year, date3.month, date3.day ) )  ## 오늘+2의 날짜
     days.append( '{:04d}{:02d}{:02d}'.format( date4.year, date4.month, date4.day ) )  ## 오늘+3의 날짜
