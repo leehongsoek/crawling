@@ -262,9 +262,9 @@ def crawl_lotte_ticketingdata(isPrnConsole):
     date4 = date3 + datetime.timedelta( days=1 )
 
     days.append( '{:04d}-{:02d}-{:02d}'.format( date1.year, date1.month, date1.day ) )  ## 오늘의 날짜
-    #days.append( '{:04d}-{:02d}-{:02d}'.format( date2.year, date2.month, date2.day ) )  ## 오늘+1의 날짜
-    #days.append( '{:04d}-{:02d}-{:02d}'.format( date3.year, date3.month, date3.day ) )  ## 오늘+2의 날짜
-    #days.append( '{:04d}-{:02d}-{:02d}'.format( date4.year, date4.month, date4.day ) )  ## 오늘+3의 날짜
+    days.append( '{:04d}-{:02d}-{:02d}'.format( date2.year, date2.month, date2.day ) )  ## 오늘+1의 날짜
+    days.append( '{:04d}-{:02d}-{:02d}'.format( date3.year, date3.month, date3.day ) )  ## 오늘+2의 날짜
+    days.append( '{:04d}-{:02d}-{:02d}'.format( date4.year, date4.month, date4.day ) )  ## 오늘+3의 날짜
 
     # 4일간 자료 가져오기
 
@@ -384,7 +384,7 @@ def crawl_lotte_ticketingdata(isPrnConsole):
 
                 if isPrnConsole:  #################
                     ticket_count += 1
-                    print( '{} : {},{},{},{},{},{},{},{},{},{}~{},{},{}'.format( today, dicCinema, cinemanamekr, sequencenogroupnamekr, screennamekr, moviecode, dicMovies[moviecode][0], dicMovies[moviecode][1], dicMovies[moviecode][2], playdt, starttime, endtime, bookingseatcount, totalseatcount ) )
+                    print( '{} : {},{},{},{},{},{},{},{},{},{},{}~{},{},{}'.format( today, (screenNo*100) + degreeNo, dicCinema, cinemanamekr, sequencenogroupnamekr, screennamekr, moviecode, dicMovies[moviecode][0], dicMovies[moviecode][1], dicMovies[moviecode][2], playdt, starttime, endtime, bookingseatcount, totalseatcount ) )
 
             if screenid_old is not None:
                 dicScreen[screenid].append( dicTime )
