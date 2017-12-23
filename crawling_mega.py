@@ -195,6 +195,7 @@ def crawl_mega_cinema(isPrnConsole):
 # 영화관(http://www.megabox.co.kr/?menuId=theater)에서 지역데이터,영화관데이터를 가지고 온다. (dicRegions,dicCinemas)
 #
 
+
 #########################################################################################################################################
 # 영화관(http://www.megabox.co.kr/?menuId=theater)에서 영화관에 스케줄데이터를 가지고 온다. (dicRegions,dicCinemas)
 #
