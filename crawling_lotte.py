@@ -194,6 +194,9 @@ def crawl_lotte_cinema(isPrnConsole):
             if isPrnConsole:  #################
                 cinema_count += 1
                 print( '{} : {},{},{},{}'.format( cinema_count, cinemaid, 'Y', sortsequence, cinemanamekr ) )
+            #
+        # for match in jsonpath_expr.find( json_obj ):
+    # for specialcinema in specialcinemas:
 
     detaildivisioncodes = ["1",   ## 서울
                            "2",   ## 경기/인천
@@ -238,6 +241,9 @@ def crawl_lotte_cinema(isPrnConsole):
             if isPrnConsole:  #################
                 cinema_count += 1
                 print( '{} : {},{},{},{}'.format( cinema_count, cinemaid, 'N', sortsequence, cinemanamekr ) )
+            #
+        #
+    #
 
 #
 # 영화관 (http://www.lottecinema.co.kr/LCHS/Contents/Cinema) 에서 극장데이터를 가지고 온다. (dicCinemas)
@@ -261,10 +267,10 @@ def crawl_lotte_ticketingdata(isPrnConsole):
     date3 = date2 + datetime.timedelta( days=1 )
     date4 = date3 + datetime.timedelta( days=1 )
 
-    #days.append( '{:04d}-{:02d}-{:02d}'.format( date1.year, date1.month, date1.day ) )  ## 오늘의 날짜
+    days.append( '{:04d}-{:02d}-{:02d}'.format( date1.year, date1.month, date1.day ) )  ## 오늘의 날짜
     days.append( '{:04d}-{:02d}-{:02d}'.format( date2.year, date2.month, date2.day ) )  ## 오늘+1의 날짜
-    #days.append( '{:04d}-{:02d}-{:02d}'.format( date3.year, date3.month, date3.day ) )  ## 오늘+2의 날짜
-    #days.append( '{:04d}-{:02d}-{:02d}'.format( date4.year, date4.month, date4.day ) )  ## 오늘+3의 날짜
+    days.append( '{:04d}-{:02d}-{:02d}'.format( date3.year, date3.month, date3.day ) )  ## 오늘+2의 날짜
+    days.append( '{:04d}-{:02d}-{:02d}'.format( date4.year, date4.month, date4.day ) )  ## 오늘+3의 날짜
 
     # 4일간 자료 가져오기
 
@@ -280,8 +286,8 @@ def crawl_lotte_ticketingdata(isPrnConsole):
             #if dicCinema != '9013': # 서귀포
             #  CinemaID=1013 #  가산디지컬
             #     continue
-            if dicCinema != '1013': #  가산디지컬
-                continue
+            #if dicCinema != '1013': #  가산디지컬
+            #    continue
 
             fields = {"paramList":
                           '{"MethodName":"GetPlaySequence",'
@@ -331,6 +337,7 @@ def crawl_lotte_ticketingdata(isPrnConsole):
                         print( '{},{} : {},{},{},{}'.format( today, movie_count, moviecode, moviename, filmnamekr, gubun ) )
 
                     moviecode_old = moviecode
+                #
             #
 
             if isPrnConsole:  #################
@@ -338,7 +345,6 @@ def crawl_lotte_ticketingdata(isPrnConsole):
                 print( '일자, no, 티켓코드, 극장명, 상영관그룹명, 상영관명, 영화명, 영화구분, 개봉일, 시작시간, 끝시간, 예약좌석수, 총좌석수' )
                 print( '-------------------------------------' )
             #
-
 
             ## dicScreen를 먼저구하기 위해 2번 돈다.
             dicScreen = {}
@@ -348,6 +354,7 @@ def crawl_lotte_ticketingdata(isPrnConsole):
                 totalseatcount = match2.value['TotalSeatCount']  # 총좌석수
 
                 dicScreen[screenid] = [screennamekr, totalseatcount]
+            #
 
             screenid_old = None
             screenNo = 0
@@ -425,7 +432,6 @@ def func_lotte_upload():
 #
 
 
-
 #########################################################################################################################################
 #########################################################################################################################################
 #########################################################################################################################################
@@ -440,12 +446,6 @@ if  __name__ == '__main__':
     crawl_lotte_ticketingdata(True) # 영화관 (http://www.lottecinema.co.kr/LCWS/Ticketing/TicketingData.aspx) 에서 극장데이터를 가지고 온다. (dicTicketingData1)
 
     func_lotte_upload()
-
-
-
-
-
-
 
 #########################################################################################################################################
 #########################################################################################################################################
