@@ -286,6 +286,8 @@
         }
         else  // 선택된 영화 자료가 있을 때.... (하나이상 선택하고 집계를 누를때..)
         {
+            $sumArray = array(); // 합계를 저장
+
             ?>
             <div class="t3">
             <table border="1">
@@ -295,7 +297,7 @@
             <?
 
             $arrCode = split(",",$Codes);
-            for ($i=0;$i< sizeof($arrCode);$i++)
+            for ($i = 0 ; $i < sizeof($arrCode) ; $i++)
             {
                 $sQuery = "SELECT moviecode
                                  ,moviename
@@ -309,7 +311,7 @@
                     $moviecode  = $ArrMovie['moviecode'];
                     $moviename  = iconv("EUC-KR", "UTF-8",$ArrMovie['moviename']);
                     ?>
-                    <th colspan="5"><?=$moviename?></th>
+                    <th colspan="24"><?=$moviename?></th>
                     <?
                 }
             }
@@ -318,11 +320,11 @@
             <tr>
             <?
             $arrCode = split(",",$Codes);
-            for ($i=0;$i< sizeof($arrCode);$i++)
+            for ($i = 0 ; $i < sizeof($arrCode) ; $i++)
             {
                 ?>
                 <th>상영관</th>
-                <th>시간표</th>
+                <th colspan="20">시간표</th>
                 <th>회차수</th>
                 <th>총좌석수</th>
                 <th>예매율</th>
@@ -357,8 +359,21 @@
                         <?
                         $arrCode = split(",",$Codes);
 
+
+
                         for ($i = 0 ; $i < sizeof($arrCode) ; $i++)
                         {
+                            $sumSumSeat   = 0 ;
+                            $sumInningTot = 0 ;
+                            $sumInningAct = 0 ;
+                            $sumTotalSeat = 0 ;
+
+                            array_push($sumArray, 0) ;
+                            array_push($sumArray, $sumSumSeat) ;
+                            array_push($sumArray, $sumInningTot) ;
+                            array_push($sumArray, $sumInningAct) ;
+                            array_push($sumArray, $sumTotalSeat) ;
+
                             $sQuery = "SELECT moviecode
                                              ,moviename
                                          FROM cgv_movies
@@ -376,7 +391,12 @@
                                 $moviecode = $ArrMovie['moviecode'];
                                 $moviename = iconv("EUC-KR", "UTF-8",$ArrMovie['moviename']);
 
-                                $sumTotalSeat = 0 ;
+                                $numRoom = 0 ;
+
+                                for ($j=0; $j <20 ; $j++)
+                                {
+                                    $arr_timeslot[$j] = "" ; // 초기화
+                                }
 
                                 $sQuery = "    SELECT filmtype
                                                      ,roomfloor
@@ -391,6 +411,8 @@
                                 $QryTickecting2 = mysql_query($sQuery,$connect) ;
                                 while  ($ArrTickecting2 = mysql_fetch_array($QryTickecting2))
                                 {
+                                    $numRoom ++ ;
+
                                     $filmtype  = $ArrTickecting2['filmtype'];
                                     $roomfloor = $ArrTickecting2['roomfloor'];
                                     $totalseat = preg_replace("/[^0-9]/", "", $ArrTickecting2['totalseat']);
@@ -416,8 +438,6 @@
                                     $QryTickecting3 = mysql_query($sQuery,$connect) ;
                                     while  ($ArrTickecting3 = mysql_fetch_array($QryTickecting3))
                                     {
-                                        $cntInning ++ ;
-
                                         $playtime   = $ArrTickecting3['playtime'] ;
                                         $playinfo   = iconv("EUC-KR", "UTF-8",$ArrTickecting3['playinfo']) ;
                                         $inningseat = preg_replace("/[^0-9]/", "", $playinfo) ;
@@ -432,9 +452,19 @@
 
                                         if  ($showTimes != "") $showTimes .= ", ";
                                         $showTimes .= $playtime . "(".$playinfo.")" ;
+
+                                        $arr_timeslot[$cntInning * 2] .= $playtime."<br>" ;
+                                        $arr_timeslot[$cntInning * 2 + 1] .= $playinfo."<br>" ;
+
+                                        $cntInning ++ ;
                                     }
                                     $totalSeat = ($actInning * $totalseat) ;
-                                    $sumTotalSeat = ($actInning * $totalseat) ;
+
+                                    for ($j=$cntInning; $j < 10; $j++) // 나머지 뒷칸은 공백으로 채운다.
+                                    {
+                                        $arr_timeslot[$j * 2] .= "<br>" ;
+                                        $arr_timeslot[$j * 2 + 1] .= "<br>" ;
+                                    }
 
                                     if  ($totalSeat != 0)
                                     {
@@ -452,16 +482,34 @@
                                     $Lst_CntInning   .= $cntInning . "[" . $actInning . "]" . "<br>" ;
                                     $Lst_TotalSeat   .= $totalSeat . "<br>" ;
                                     $Lst_BookingRate .= $bookingRate . "%<br>" ;
+
+                                    $sumSumSeat   += $sumSeat ;
+                                    $sumInningTot += $cntInning ;
+                                    $sumInningAct += $actInning ;
+                                    $sumTotalSeat += $totalSeat ;
+
                                 } // while  ($ArrTickecting2 = mysql_fetch_array($QryTickecting2))
 
                             } // while  ($ArrMovie = mysql_fetch_array($QryMovie))
+
                             ?>
                             <td style="vertical-align: top;"><?=$Lst_ScrnName?></td> <!--상영관명-->
-                            <td style="vertical-align: top;"><?=$Lst_ShowTimes?></td> <!--상영시간표들-->
+                            <!-- td style="vertical-align: top;"><?=$Lst_ShowTimes?></td--> <!--상영시간표들-->
+                            <?
+                            for ($j=0; $j < 20; $j++)
+                            {
+                                ?><td text-align="center" style="vertical-align: top;"><?=$arr_timeslot[$j]?></td> <!-- 시간표 --><?
+                            }
+                            ?>
                             <td style="vertical-align: top;" class="ty2"><?=$Lst_CntInning?></td> <!--회차수-->
                             <td style="vertical-align: top;" class="ty2"><?=$Lst_TotalSeat?></td> <!--총좌석수-->
                             <td style="vertical-align: top;" class="ty2"><?=$Lst_BookingRate?></td><!--예매율-->
                             <?
+                            $sumArray[$i*5+0] += $numRoom ;
+                            $sumArray[$i*5+1] += $sumSumSeat ;
+                            $sumArray[$i*5+2] += $sumInningTot ;
+                            $sumArray[$i*5+3] += $sumInningAct ;
+                            $sumArray[$i*5+4] += $sumTotalSeat ;
 
                         } // for ($i = 0 ; $i < sizeof($arrCode) ; $i++)
                         ?>
@@ -473,16 +521,25 @@
             ?>
 
             <tr>
-                <td colspan="2">합계</td> <!--합계-->
+                <td colspan="2" style="text-align: center;">합계</td> <!--합계-->
                 <?
                 for ($i = 0 ; $i < sizeof($arrCode) ; $i++)
                 {
                     ?>
-                    <td colspan="2"></td> <!--상영관명--> <!--상영시간표들-->
-                    <td style="vertical-align: top;" class="ty2"></td> <!--회차수-->
-                    <td style="vertical-align: top;" class="ty2"></td> <!--총좌석수-->
-                    <td style="vertical-align: top;" class="ty2"></td><!--예매율-->
+                    <td><?=$sumArray[$i*5+0]?></td> <!--상영관명-->
+                    <td colspan="20"><?=$sumArray[$i*5+1]?></td> <!--상영시간표들-->
+                    <td style="vertical-align: top;" class="ty2"><?=$sumArray[$i*5+2]?>[<?=$sumArray[$i*5+3]?>]</td> <!--회차수-->
+                    <td style="vertical-align: top;" class="ty2"><?=$sumArray[$i*5+4]?></td> <!--총좌석수-->
                     <?
+                    if  ($sumArray[$i*5+4] != 0)
+                    {
+                        ?><td style="vertical-align: top;" class="ty2"><?=number_format(round( ($sumArray[$i*5+4] - $sumArray[$i*5+1]) / $sumArray[$i*5+4] * 100.0, 1),1)?>%</td><!--예매율--><?
+                    }
+                    else
+                    {
+
+                        ?><td style="vertical-align: top;" class="ty2"></td><!--예매율--><?
+                    }
                 }
                 ?>
             </tr>

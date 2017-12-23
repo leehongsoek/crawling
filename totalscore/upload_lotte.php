@@ -161,7 +161,7 @@
                                       ,'$filmnamekr'
                                       ,'$gubun'
                                       )
-                      " ;  //echo iconv("EUC-KR", "UTF-8",$sQuery);
+                      " ;  //if  ($moviecode==11783) echo iconv("EUC-KR", "UTF-8",$sQuery);
             mysql_query($sQuery,$_connect) ;
         }
 
@@ -238,22 +238,37 @@
 
                     Insert_lotte_ticketing2($playdate, $cinemaId, $screenid, $screennamekr, $totalseatcount, $connect);
 
-                      //  var_dump($val[2]);
+                    //var_dump($val[2]);
+                    //var_dump($screennamekr);
+                    //var_dump(count($val)-2);
+                    //echo $screennamekr."\n";
 
-                    $jvalue = $val[2] ;
-                    foreach($jvalue as $key => $val) // dicTime
+                    for ($i=2 ; $i<count($val) ; $i++)
                     {
-                        $degreeNo         = $key ;
-                        $starttime        = $val[0] ;
-                        $endtime          = $val[1] ;
-                        $bookingseatcount = $val[2] ;
-                        $moviecode        = $val[3] ;
-                        $filmnamekr       = $val[4] ;
-                        $gubun            = $val[5] ;
+                        $jvalue = $val[$i] ;
 
-                        Insert_lotte_ticketing3( $playdate, $cinemaId, $screenid, $degreeNo, $screennamekr, $starttime, $endtime, $bookingseatcount, $moviecode, $filmnamekr, $gubun, $connect);
+                        foreach($jvalue as $key => $val2) // dicTime
+                        {
+                            $degreeNo         = $key ;
+                            $starttime        = $val2[0] ;
+                            $endtime          = $val2[1] ;
+                            $bookingseatcount = $val2[2] ;
+                            $moviecode        = $val2[3] ;
+                            $filmnamekr       = $val2[4] ;
+                            $gubun            = $val2[5] ;
 
-                        //$moviecode = $key ;
+                            /*
+                            if  ($moviecode==12041)
+                            {
+                                //var_dump($moviecode);
+                                echo "  " . $starttime ."~". $screenid."\n";
+                            }
+                            */
+
+                            Insert_lotte_ticketing3( $playdate, $cinemaId, $screenid, $degreeNo, $screennamekr, $starttime, $endtime, $bookingseatcount, $moviecode, $filmnamekr, $gubun, $connect);
+
+                            //$moviecode = $key ;
+                        }
                     }
 
                     //$moviecode = $key ;
