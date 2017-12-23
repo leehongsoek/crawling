@@ -261,10 +261,10 @@ def crawl_lotte_ticketingdata(isPrnConsole):
     date3 = date2 + datetime.timedelta( days=1 )
     date4 = date3 + datetime.timedelta( days=1 )
 
-    days.append( '{:04d}-{:02d}-{:02d}'.format( date1.year, date1.month, date1.day ) )  ## 오늘의 날짜
+    #days.append( '{:04d}-{:02d}-{:02d}'.format( date1.year, date1.month, date1.day ) )  ## 오늘의 날짜
     days.append( '{:04d}-{:02d}-{:02d}'.format( date2.year, date2.month, date2.day ) )  ## 오늘+1의 날짜
-    days.append( '{:04d}-{:02d}-{:02d}'.format( date3.year, date3.month, date3.day ) )  ## 오늘+2의 날짜
-    days.append( '{:04d}-{:02d}-{:02d}'.format( date4.year, date4.month, date4.day ) )  ## 오늘+3의 날짜
+    #days.append( '{:04d}-{:02d}-{:02d}'.format( date3.year, date3.month, date3.day ) )  ## 오늘+2의 날짜
+    #days.append( '{:04d}-{:02d}-{:02d}'.format( date4.year, date4.month, date4.day ) )  ## 오늘+3의 날짜
 
     # 4일간 자료 가져오기
 
@@ -280,8 +280,8 @@ def crawl_lotte_ticketingdata(isPrnConsole):
             #if dicCinema != '9013': # 서귀포
             #  CinemaID=1013 #  가산디지컬
             #     continue
-            #if dicCinema != '1013': #  가산디지컬
-            #    continue
+            if dicCinema != '1013': #  가산디지컬
+                continue
 
             fields = {"paramList":
                           '{"MethodName":"GetPlaySequence",'
@@ -433,9 +433,9 @@ def func_lotte_upload():
 
 if  __name__ == '__main__':
 
-    crawl_lotte_boxoffice(False) # 영화 / 박스 오피스(http://www.lottecinema.co.kr/LCHS/Contents/Movie/Movie-List.aspx) 에서 영화데이터를 가지고 온다. (dicMovieData)
+    crawl_lotte_boxoffice(True) # 영화 / 박스 오피스(http://www.lottecinema.co.kr/LCHS/Contents/Movie/Movie-List.aspx) 에서 영화데이터를 가지고 온다. (dicMovieData)
 
-    crawl_lotte_cinema(False) # 영화관 (http://www.lottecinema.co.kr/LCHS/Contents/Cinema) 에서 극장데이터를 가지고 온다. (dicCinemas)
+    crawl_lotte_cinema(True) # 영화관 (http://www.lottecinema.co.kr/LCHS/Contents/Cinema) 에서 극장데이터를 가지고 온다. (dicCinemas)
 
     crawl_lotte_ticketingdata(True) # 영화관 (http://www.lottecinema.co.kr/LCWS/Ticketing/TicketingData.aspx) 에서 극장데이터를 가지고 온다. (dicTicketingData1)
 
