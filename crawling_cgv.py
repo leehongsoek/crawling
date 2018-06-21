@@ -561,6 +561,7 @@ def crawl_cgv_upload():
     print( '### 서버 전송 시작 ###' )
 
     # 메모리 부족 문제 발생 (2018.06.21)
+
     # Fatal error: Allowed memory size of 134217728 bytes exhausted (tried to allocate 32 bytes) in /usr/local/apache2/htdocs/totalscore/lib/JSON.php on line XXX
     # https://zetawiki.com/wiki/PHP_%EB%A9%94%EB%AA%A8%EB%A6%AC_%EB%B6%80%EC%A1%B1
     # /usr/local/apache2/htdocs/totalscore/lib/JSON.php 상단에  ini_set('memory_limit','-1'); 를 사용해서 해결,,
